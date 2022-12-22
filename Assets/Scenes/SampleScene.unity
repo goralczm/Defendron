@@ -1621,11 +1621,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waveStages:
+  - enemyCount: 2
+    enemyIntervals: 10
+    enemyPrefab: {fileID: 6671987802029285591, guid: 8e2112ebb937ea34da634f8a91ce719a, type: 3}
   - enemyCount: 20
     enemyIntervals: 0.5
     enemyPrefab: {fileID: 856618438626201153, guid: f2e1354c11d55264e9b35f80b34cbf0a, type: 3}
   - enemyCount: 20
-    enemyIntervals: 1
+    enemyIntervals: 2
     enemyPrefab: {fileID: 7697185055082254938, guid: 6d70d463fcca704488bcd2887480d062, type: 3}
   - enemyCount: 20
     enemyIntervals: 2
@@ -1647,7 +1650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 1705273658}
-  towerPrefab: {fileID: 751666861864449259, guid: 35474340009318f408f7b712c1d85b0f, type: 3}
+  tower: {fileID: 11400000, guid: d4b9eb21ca545f04b987514e73d922e3, type: 2}
   noBuildingColor: {r: 0.79607844, g: 0.2901961, b: 0.2901961, a: 1}
   ghostColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 0.5882353}
 --- !u!114 &1551336006
@@ -1740,9 +1743,9 @@ GameObject:
   - component: {fileID: 1705273658}
   - component: {fileID: 1705273657}
   - component: {fileID: 1705273659}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Nodes
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3670,9 +3673,10 @@ GameObject:
   - component: {fileID: 2073735694}
   - component: {fileID: 2073735696}
   - component: {fileID: 2073735695}
+  - component: {fileID: 2073735697}
   m_Layer: 0
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4451,3 +4455,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!19719996 &2073735697
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073735693}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0.00001

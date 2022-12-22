@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb01531027057641ac016b3fd3f3519, type: 3}
+  m_Name: Basic Tower
+  m_EditorClassIdentifier: 
+  towerLevels:
+  - name: Basic Tower
+    health: 20
+    range: 2
+    rateOfFire: 0.5
+    sprite: {fileID: -1365646832, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  - name: Better Tower
+    health: 25
+    range: 3
+    rateOfFire: 0.4
+    sprite: {fileID: -109403823, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  - name: Mega Tower
+    health: 30
+    range: 3.5
+    rateOfFire: 0.3
+    sprite: {fileID: 933095855, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  - name: Ultra Tower
+    health: 35
+    range: 4
+    rateOfFire: 0.2
+    sprite: {fileID: 525841379, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  - name: Mega Ultra Tower
+    health: 40
+    range: 4.5
+    rateOfFire: 0.1
+    sprite: {fileID: -210557153, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  - name: Gozzila Tower
+    health: 45
+    range: 5
+    rateOfFire: 0.05
+    sprite: {fileID: -65682170, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  - name: God of Tower
+    health: 50
+    range: 5.5
+    rateOfFire: 0.001
+    sprite: {fileID: 322441408, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  - name: Tower
+    health: 55
+    range: 6
+    rateOfFire: 0.5
+    sprite: {fileID: 1164897413, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
+    bullet: {fileID: 5600162859373986173, guid: 75c321acf85a02b45a5b8b542f33afa7, type: 3}

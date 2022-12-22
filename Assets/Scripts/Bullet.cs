@@ -5,14 +5,8 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed;
-    public float lifeTime;
     public float range;
     public int damage;
-
-    private void Start()
-    {
-        Invoke("DestroyProjectile", lifeTime);
-    }
 
     private void Update()
     {
@@ -28,12 +22,9 @@ public class Bullet : MonoBehaviour
                     Destroy(enemy.gameObject);
                 Destroy(gameObject);
             }
+            else if (hit[i].tag == "Wall")
+                Destroy(gameObject);
         }
-    }
-
-    private void DestroyProjectile()
-    {
-        Destroy(gameObject);
     }
 
     private void OnDrawGizmosSelected()
