@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
-  rateOfFire: 0.1
+  rateOfFire: 0.25
   range: 3
 --- !u!1 &1576504969740777664
 GameObject:

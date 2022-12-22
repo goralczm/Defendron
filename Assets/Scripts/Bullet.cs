@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     public float speed;
     public float lifeTime;
     public float range;
+    public int damage;
 
     private void Start()
     {
@@ -21,7 +22,10 @@ public class Bullet : MonoBehaviour
         {
             if (hit[i].tag == "Enemy")
             {
-                Destroy(hit[i].gameObject);
+                EnemyAi enemy = hit[i].gameObject.GetComponent<EnemyAi>();
+                enemy.health -= damage;
+                if (enemy.health <= 0)
+                    Destroy(enemy.gameObject);
                 Destroy(gameObject);
             }
         }

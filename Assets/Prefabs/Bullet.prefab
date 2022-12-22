@@ -100,3 +100,4 @@ MonoBehaviour:
   speed: 10
   lifeTime: 5
   range: 0.25
+  damage: 1

@@ -1585,6 +1585,7 @@ GameObject:
   - component: {fileID: 1551336003}
   - component: {fileID: 1551336004}
   - component: {fileID: 1551336005}
+  - component: {fileID: 1551336006}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1619,8 +1620,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bee076d655283a41b440a5920cbdacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyIntervals: 0.15
-  enemyPrefab: {fileID: 856618438626201153, guid: f2e1354c11d55264e9b35f80b34cbf0a, type: 3}
+  waveStages:
+  - enemyCount: 20
+    enemyIntervals: 0.5
+    enemyPrefab: {fileID: 856618438626201153, guid: f2e1354c11d55264e9b35f80b34cbf0a, type: 3}
+  - enemyCount: 20
+    enemyIntervals: 1
+    enemyPrefab: {fileID: 7697185055082254938, guid: 6d70d463fcca704488bcd2887480d062, type: 3}
+  - enemyCount: 20
+    enemyIntervals: 2
+    enemyPrefab: {fileID: 5797656062557365048, guid: 1407267c23c88ea478b071b3bb9643c2, type: 3}
+  - enemyCount: 10
+    enemyIntervals: 10
+    enemyPrefab: {fileID: 1128995130855918528, guid: ad261304af33c9d4e89978aa431b3691, type: 3}
+  currWave: 0
 --- !u!114 &1551336005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1637,6 +1650,19 @@ MonoBehaviour:
   towerPrefab: {fileID: 751666861864449259, guid: 35474340009318f408f7b712c1d85b0f, type: 3}
   noBuildingColor: {r: 0.79607844, g: 0.2901961, b: 0.2901961, a: 1}
   ghostColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 0.5882353}
+--- !u!114 &1551336006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551336002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c81e3cdb09eb9bc4080d5e7839e54427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 50
 --- !u!1 &1625024177
 GameObject:
   m_ObjectHideFlags: 0
