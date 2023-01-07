@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float speed;
-    public float range;
-    public int damage;
+    [SerializeField] private float speed;
+    [SerializeField] private float range;
+    [SerializeField] private int damage;
 
     private void Update()
     {
@@ -19,7 +19,10 @@ public class Bullet : MonoBehaviour
                 EnemyAi enemy = hit[i].gameObject.GetComponent<EnemyAi>();
                 enemy.health -= damage;
                 if (enemy.health <= 0)
+                {
+                    GameManager.instance.money += enemy.reward;
                     Destroy(enemy.gameObject);
+                }
                 Destroy(gameObject);
             }
             else if (hit[i].tag == "Wall")

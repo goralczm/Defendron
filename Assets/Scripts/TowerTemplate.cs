@@ -4,6 +4,7 @@ using UnityEngine;
 public class TowerStage
 {
     public string name;
+    public int cost;
     public int health;
     public float range;
     public float rateOfFire;
@@ -28,7 +29,7 @@ public class TowerTemplate : ScriptableObject
         towerAiScript.enabled = false;
         tower.AddComponent<BoxCollider2D>().enabled = false;
         tower.tag = "Tower";
-        tower.layer = 6;
+        tower.layer = 7;
 
         return tower;
     }

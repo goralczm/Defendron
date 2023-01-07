@@ -1,32 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAi : MonoBehaviour
 {
     public int health;
-    public float speed;
+    public int reward;
 
-    private Transform[] points;
-    private int pointIndex;
+    [SerializeField] private float speed;
+
+    private GameManager _gameManager;
+    private Transform[] _points;
+    private int _pointIndex;
 
     private void Start()
     {
-        points = Waypoints.points;
+        _points = Waypoints.points;
+        _gameManager = GameManager.instance;
     }
 
     private void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, points[pointIndex].position, speed * Time.deltaTime);
-        if (transform.position == points[pointIndex].position)
+        transform.position = Vector2.MoveTowards(transform.position, _points[_pointIndex].position, speed * Time.deltaTime);
+        if (transform.position == _points[_pointIndex].position)
         {
-            if (pointIndex != points.Length - 1)
-                pointIndex++;
+            if (_pointIndex != _points.Length - 1)
+                _pointIndex++;
             else
             {
                 Destroy(gameObject);
-                GameManager.instance.health -= health;
-                if (GameManager.instance.health < 0)
+                _gameManager.health -= health;
+                if (_gameManager.health < 0)
                     Debug.Log("PRZEGRA£EŒ!");
             }
         }

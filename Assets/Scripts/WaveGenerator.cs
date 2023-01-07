@@ -12,37 +12,36 @@ public class WaveStage
 
 public class WaveGenerator : MonoBehaviour
 {
-    public WaveStage[] waveStages;
-    public int currWave;
-
-    private int enemyCount;
-
-    private float timer;
+    [SerializeField] private WaveStage[] waveStages;
+    
+    private int _currWave;
+    private int _enemyCount;
+    private float _timer;
 
     private void Start()
     {
-        timer = waveStages[currWave].enemyIntervals;
-        enemyCount = waveStages[currWave].enemyCount;
+        _timer = waveStages[_currWave].enemyIntervals;
+        _enemyCount = waveStages[_currWave].enemyCount;
     }
 
     private void Update()
     {
-        if (timer <= 0)
+        if (_timer <= 0)
         {
-            if (enemyCount > 0)
+            if (_enemyCount > 0)
             {
-                Instantiate(waveStages[currWave].enemyPrefab, transform.position, Quaternion.identity);
-                timer = waveStages[currWave].enemyIntervals;
-                enemyCount--;
+                Instantiate(waveStages[_currWave].enemyPrefab, transform.position, Quaternion.identity);
+                _timer = waveStages[_currWave].enemyIntervals;
+                _enemyCount--;
             }
             else
             {
-                if (currWave < waveStages.Length - 1)
-                    currWave++;
-                enemyCount = waveStages[currWave].enemyCount;
+                if (_currWave < waveStages.Length - 1)
+                    _currWave++;
+                _enemyCount = waveStages[_currWave].enemyCount;
             }
         }
         else
-            timer -= Time.deltaTime;
+            _timer -= Time.deltaTime;
     }
 }

@@ -4,46 +4,42 @@ using UnityEngine;
 
 public class TowerAi : MonoBehaviour
 {
-    private Transform target;
-    private float timer;
-
     public TowerTemplate towerTemplate;
-    private int currTowerLevel;
+
+    private Transform _target;
+    private float _timer;
+    private int _currTowerLevel;
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha2))
             UpgradeTower();
 
-        if (target == null)
+        if (_target == null)
         {
-            Collider2D[] hit = Physics2D.OverlapCircleAll(transform.position, towerTemplate.towerLevels[currTowerLevel].range);
-            for (int i = 0; i < hit.Length; i++)
-            {
-                if (hit[i].tag == "Enemy")
-                {
-                    if (target == null)
-                        target = hit[i].transform;
-                }
-            }
+            Collider2D hit = Physics2D.OverlapCircle(transform.position, towerTemplate.towerLevels[_currTowerLevel].range, 1 << 8);
+            if (hit != null && _target != hit)
+                _target = hit.transform;
         }
         else
         {
-            if (Vector2.Distance(transform.position, target.position) > towerTemplate.towerLevels[currTowerLevel].range)
-                target = null;
+            float distanceBtwTarget = Vector2.Distance(transform.position, _target.position);
+            if (distanceBtwTarget > towerTemplate.towerLevels[_currTowerLevel].range)
+                _target = null;
             else
             {
-                if (timer <= 0)
+                if (_timer <= 0)
                 {
-                    Vector3 diff = target.position - transform.position;
-                    float rotZ = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+                    Vector3 dir = _target.position - transform.position;
+                    float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                     Quaternion targetRot = Quaternion.Euler(0, 0, rotZ + 90f);
-                    Instantiate(towerTemplate.towerLevels[currTowerLevel].bullet, transform.position, targetRot);
-                    timer = towerTemplate.towerLevels[currTowerLevel].rateOfFire;
+
+                    Instantiate(towerTemplate.towerLevels[_currTowerLevel].bullet, transform.position, targetRot);
+                    _timer = towerTemplate.towerLevels[_currTowerLevel].rateOfFire;
                 }
                 else
                 {
-                    timer -= Time.deltaTime;
+                    _timer -= Time.deltaTime;
                 }
             }
         }
@@ -51,22 +47,20 @@ public class TowerAi : MonoBehaviour
 
     public bool UpgradeTower()
     {
-        if (currTowerLevel < towerTemplate.towerLevels.Length - 1)
+        if (_currTowerLevel < towerTemplate.towerLevels.Length - 1)
         {
-            currTowerLevel++;
-            GetComponent<SpriteRenderer>().sprite = towerTemplate.towerLevels[currTowerLevel].sprite;
-            name = towerTemplate.towerLevels[currTowerLevel].name;
+            _currTowerLevel++;
+            GetComponent<SpriteRenderer>().sprite = towerTemplate.towerLevels[_currTowerLevel].sprite;
+            name = towerTemplate.towerLevels[_currTowerLevel].name;
             return true;
         }
         else
             return false;
     }
 
-
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, towerTemplate.towerLevels[currTowerLevel].range);
+        Gizmos.DrawWireSphere(transform.position, towerTemplate.towerLevels[_currTowerLevel].range);
     }
 }
