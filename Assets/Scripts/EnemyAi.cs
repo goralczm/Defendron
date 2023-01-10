@@ -27,9 +27,7 @@ public class EnemyAi : MonoBehaviour
             else
             {
                 Destroy(gameObject);
-                _gameManager.health -= health;
-                if (_gameManager.health < 0)
-                    Debug.Log("PRZEGRA£EŒ!");
+                _gameManager.TakeDamage(health);
             }
         }
     }

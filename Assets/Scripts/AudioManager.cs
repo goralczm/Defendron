@@ -10,9 +10,9 @@ public class Sound
     public AudioClip clip;
 
     [Range(0f, 1f)]
-    public float volume;
+    public float volume = .2f;
     [Range(.1f, 3f)]
-    public float pitch;
+    public float pitch = 1;
 
     public bool loop;
 
@@ -23,6 +23,7 @@ public class Sound
 
 public class AudioManager : MonoBehaviour
 {
+    public AudioMixerGroup audioMixerGroup;
     public Sound[] sounds;
 
     private void Awake()
@@ -31,6 +32,7 @@ public class AudioManager : MonoBehaviour
         {
             sound.source = gameObject.AddComponent<AudioSource>();
             sound.source.clip = sound.clip;
+            sound.source.outputAudioMixerGroup = audioMixerGroup;
 
             sound.source.volume = sound.volume;
             sound.source.pitch = sound.pitch;
@@ -40,7 +42,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        Play("Theme");
+        //Play("Theme");
     }
 
     public void Play(string name)

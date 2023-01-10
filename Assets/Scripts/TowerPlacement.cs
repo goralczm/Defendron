@@ -11,16 +11,17 @@ public class TowerPlacement : MonoBehaviour
     [SerializeField] private Color noBuildingColor;
     [SerializeField] private Color ghostColor;
 
+    [HideInInspector] public bool isBuilding;
+
     private GameManager _gameManager;
+    private AudioManager _audioManager;
     private TowerTemplate _currentTower;
-    private GameObject _currTowerGhost;
-    private Transform _currTowerTarget;
-    private bool _isBuilding;
-    private bool _isDeleting;
+    private TowerAi _currTowerGhost;
 
     private void Start()
     {
         _gameManager = GameManager.instance;
+        _audioManager = _gameManager.GetComponent<AudioManager>();
         foreach (TowerTemplate tower in towers)
         {
             GameObject tmp = Instantiate(towerButtonPrefab, shopUi);
@@ -31,22 +32,17 @@ public class TowerPlacement : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            _isBuilding = false;
-            _isDeleting = false;
-        }
-
-        Ray raycast = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D towerHit = Physics2D.Raycast(raycast.origin, raycast.direction, Mathf.Infinity, 1 << 7);
-        if (towerHit.collider != null)
+            isBuilding = false;
 
         #region Building
-        if (_isBuilding)
+        if (isBuilding)
         {
             if (_currTowerGhost == null)
             {
-                _currTowerGhost = _currentTower.CreateTower();
+                _currTowerGhost = _currentTower.CreateTower().GetComponent<TowerAi>();
+                _currTowerGhost.ShowRangeIndicator();
             }
+
             SpriteRenderer rend = _currTowerGhost.GetComponent<SpriteRenderer>();
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -63,63 +59,26 @@ public class TowerPlacement : MonoBehaviour
                 {
                     _gameManager.money -= _currentTower.towerLevels[0].cost;
                     rend.color = Color.white;
-                    _currTowerGhost.GetComponent<TowerAi>().enabled = true;
+                    _currTowerGhost.HideRangeIndicator();
+                    _currTowerGhost.GetComponent<TowerAi>().isBuilding = false;
                     _currTowerGhost.GetComponent<BoxCollider2D>().enabled = true;
                     _currTowerGhost = null;
-                    _isBuilding = false;
+                    isBuilding = false;
+                    _audioManager.Play("build");
                 }
             }
             else
                 rend.color = noBuildingColor;
         }
         #endregion
-        else
-        {
-            if (_currTowerGhost != null)
-                Destroy(_currTowerGhost);
-
-            if (Input.GetKeyDown(KeyCode.B))
-                _isDeleting = !_isDeleting;
-
-            if (towerHit.collider != null)
-            {
-                if (_isDeleting)
-                {
-                    if (_currTowerTarget != null && towerHit.transform != _currTowerTarget)
-                        _currTowerTarget.GetComponent<SpriteRenderer>().color = Color.white;
-                    _currTowerTarget = towerHit.transform;
-                    _currTowerTarget.GetComponent<SpriteRenderer>().color = noBuildingColor;
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
-                    {
-                        _gameManager.money += towerHit.collider.GetComponent<TowerAi>().towerTemplate.towerLevels[0].cost / 2;
-                        Destroy(towerHit.collider.gameObject);
-                    }
-                }
-                else
-                {
-                    if (_currTowerTarget != null)
-                    {
-                        _currTowerTarget.GetComponent<SpriteRenderer>().color = Color.white;
-                        _currTowerTarget = null;
-                    }
-                }
-            }
-            else
-            {
-                if (_currTowerTarget != null)
-                {
-                    _currTowerTarget.GetComponent<SpriteRenderer>().color = Color.white;
-                    _currTowerTarget = null;
-                }
-            }
-        }
     }
 
     public void BuildTower(TowerTemplate towerTemplate)
     {
         if (towerTemplate.towerLevels[0].cost > _gameManager.money)
             return;
-        _isBuilding = true;
+        _audioManager.Play("select");
+        isBuilding = true;
         _currentTower = towerTemplate;
     }
 }

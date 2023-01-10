@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,13 +13,24 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public int money;
-    public int health;
+    public GameObject rangeIndicator;
 
-    public TextMeshProUGUI moneyText;
+    public int health;
+    public int money;
+
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextMeshProUGUI moneyText;
 
     private void Update()
     {
         moneyText.text = "Money: " + money.ToString() + "$";
+        healthText.text = "Health: " + health.ToString();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -26,7 +26,7 @@ public class TowerTemplate : ScriptableObject
         tower.name = towerLevels[0].name;
         TowerAi towerAiScript = tower.AddComponent<TowerAi>();
         towerAiScript.towerTemplate = this;
-        towerAiScript.enabled = false;
+        towerAiScript.isBuilding = true;
         tower.AddComponent<BoxCollider2D>().enabled = false;
         tower.tag = "Tower";
         tower.layer = 7;
