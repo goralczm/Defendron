@@ -13,7 +13,10 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public PopupPanel popupPanel;
     public GameObject rangeIndicator;
+    public Material defaultSpriteMat;
+    public Material pixelOutlineMat;
 
     public int health;
     public int money;

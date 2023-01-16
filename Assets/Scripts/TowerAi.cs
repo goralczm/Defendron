@@ -64,27 +64,39 @@ public class TowerAi : MonoBehaviour
         }
     }
 
-    public bool UpgradeTower()
+    public bool UpgradeTower(bool pay)
     {
-        if (_currTowerLevel < towerTemplate.towerLevels.Length - 1)
+        if (_currTowerLevel == towerTemplate.towerLevels.Length - 1)
+            return false;
+
+        if (towerTemplate.towerLevels[_currTowerLevel].cost > _gameManager.money && pay)
+            return false;
+
+        if (pay)
+            _gameManager.money -= towerTemplate.towerLevels[_currTowerLevel].cost;
+        _currTowerLevel++;
+        GetComponent<SpriteRenderer>().sprite = towerTemplate.towerLevels[_currTowerLevel].sprite;
+        name = towerTemplate.towerLevels[_currTowerLevel].name;
+        ShowRangeIndicator();
+        _audioManager.Play("upgrade");
+        return true;
+    }
+
+    public void DegradeTower()
+    {
+        if (_currTowerLevel > 0)
         {
-            if (towerTemplate.towerLevels[_currTowerLevel].cost > _gameManager.money)
-                return false;
-            _currTowerLevel++;
+            _currTowerLevel--;
             GetComponent<SpriteRenderer>().sprite = towerTemplate.towerLevels[_currTowerLevel].sprite;
             name = towerTemplate.towerLevels[_currTowerLevel].name;
-            _gameManager.money -= towerTemplate.towerLevels[_currTowerLevel].cost;
             ShowRangeIndicator();
-            _audioManager.Play("upgrade");
-            return true;
+            _audioManager.Play("degrade");
         }
-        else
-            return false;
     }
 
     public void DestroyTower()
     {
-        _gameManager.money += towerTemplate.towerLevels[_currTowerLevel].cost / 2;
+        _gameManager.money += ReturnSellCost();
         _audioManager.Play("sell");
         HideRangeIndicator();
         Destroy(gameObject);
@@ -102,7 +114,6 @@ public class TowerAi : MonoBehaviour
             _rangeIndicator.transform.localScale = new Vector3(range, range, range);
         }
     }
-
     public void HideRangeIndicator()
     {
         if (_rangeIndicator != null)
@@ -110,6 +121,33 @@ public class TowerAi : MonoBehaviour
             Destroy(_rangeIndicator.gameObject);
             _rangeIndicator = null;
         }
+    }
+
+    public void OnSelectTarget()
+    {
+        _spriteRend.material = _gameManager.pixelOutlineMat;
+        ShowRangeIndicator();
+    }
+
+    public void OnDeselectTarget()
+    {
+        _spriteRend.material = _gameManager.defaultSpriteMat;
+        HideRangeIndicator();
+    }
+
+    public int ReturnUpgradeCost()
+    {
+        return _currTowerLevel < towerTemplate.towerLevels.Length - 1 ? towerTemplate.towerLevels[_currTowerLevel + 1].cost : 0;
+    }
+
+    public int ReturnSellCost()
+    {
+        int sellCost = 0;
+        for (int i = 0; i < _currTowerLevel; i++)
+        {
+            sellCost += towerTemplate.towerLevels[i].cost / 2;
+        }
+        return sellCost;
     }
 
     private void OnDrawGizmosSelected()

@@ -2,11 +2,14 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] private Material outlinePixelMat;
+    [SerializeField] private Material spriteDefaultMat;
     [SerializeField] private float cameraSpeed;
     [SerializeField] private float minWidth, maxWidth;
     [SerializeField] private float minHeight, maxHeight;
     [SerializeField] private float minCamSize, maxCamSize;
 
+    private PopupPanel _popupPanel;
     private TowerPlacement _towerPlacement;
     private TowerAi _target;
     private float _currMinWidth, _currMaxWidth;
@@ -15,6 +18,7 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        _popupPanel = GameManager.instance.popupPanel;
         _towerPlacement = GameManager.instance.gameObject.GetComponent<TowerPlacement>();
         _zoom = Camera.main.orthographicSize;
         _currMinHeight = _zoom - minHeight;
@@ -41,17 +45,19 @@ public class CameraController : MonoBehaviour
             {
                 if (_target != null)
                 {
-                    _target.HideRangeIndicator();
+                    _target.OnDeselectTarget();
+                    _popupPanel.gameObject.SetActive(false);
                 }    
                 _target = hit.transform.GetComponent<TowerAi>();
-                _target.ShowRangeIndicator();
+                _target.OnSelectTarget();
+                _popupPanel.PopulateInfo(_target);
+                _popupPanel.gameObject.SetActive(true);
             }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) && _target != null)
         {
-            _target.HideRangeIndicator();
-            _target = null;
+            DeselectTarget();
         }
 
         Vector3 targetPos = new Vector3();
@@ -60,5 +66,12 @@ public class CameraController : MonoBehaviour
         else
             targetPos = new Vector3(_target.transform.position.x, _target.transform.position.y, -10);
         transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * cameraSpeed);
+    }
+
+    public void DeselectTarget()
+    {
+        _popupPanel.gameObject.SetActive(false);
+        _target.OnDeselectTarget();
+        _target = null;
     }
 }
