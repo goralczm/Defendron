@@ -60,11 +60,11 @@ public class CameraController : MonoBehaviour
             DeselectTarget();
         }
 
-        Vector3 targetPos = new Vector3();
-        if (_target == null)
+        Vector3 targetPos = new Vector3(Mathf.Clamp(transform.position.x + horizontal, _zoom - _currMinWidth, _currMaxWidth - _zoom), Mathf.Clamp(transform.position.y + vertical, _zoom - _currMinHeight, _currMaxHeight - _zoom), -10);
+        /*if (_target == null)
             targetPos = new Vector3(Mathf.Clamp(transform.position.x + horizontal, _zoom - _currMinWidth, _currMaxWidth - _zoom), Mathf.Clamp(transform.position.y + vertical, _zoom - _currMinHeight, _currMaxHeight - _zoom), -10);
         else
-            targetPos = new Vector3(_target.transform.position.x, _target.transform.position.y, -10);
+            targetPos = new Vector3(_target.transform.position.x, _target.transform.position.y, -10);*/
         transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * cameraSpeed);
     }
 

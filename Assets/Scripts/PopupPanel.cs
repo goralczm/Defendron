@@ -4,6 +4,7 @@ using TMPro;
 
 public class PopupPanel : MonoBehaviour
 {
+    public TextMeshProUGUI towerName;
     public Button upgradeButton;
     public Button sellButton;
     public TextMeshProUGUI upgradeCost;
@@ -15,8 +16,9 @@ public class PopupPanel : MonoBehaviour
         sellButton.onClick.RemoveAllListeners();
         upgradeButton.interactable = true;
 
-        sellCost.text = "Sell cost: " + tower.ReturnSellCost() + "$";
+        sellCost.text = tower.ReturnSellCost() + "$";
         sellButton.onClick.AddListener(delegate { tower.DestroyTower(); gameObject.SetActive(false); });
+        towerName.text = tower.name;
 
         if (tower.ReturnUpgradeCost() == 0)
         {
@@ -25,7 +27,7 @@ public class PopupPanel : MonoBehaviour
         }
         else
         {
-            upgradeCost.text = "Upgrade cost: " + tower.ReturnUpgradeCost() + "$";
+            upgradeCost.text = "Cost: " + tower.ReturnUpgradeCost() + "$";
             upgradeButton.onClick.AddListener(delegate { tower.UpgradeTower(true); PopulateInfo(tower); });
         }
     }

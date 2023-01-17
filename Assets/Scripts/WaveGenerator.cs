@@ -16,9 +16,9 @@ public class WaveStage
 
 public class WaveGenerator : MonoBehaviour
 {
-    [SerializeField] private float startTime;
-    [SerializeField] private WaveStage[] waveStages;
     [SerializeField] private TextMeshProUGUI wavesText;
+    [SerializeField] private WaveStage[] waveStages;
+    [HideInInspector] public bool gameStarted;
     
     private int _currWave;
     private int _enemyCount;
@@ -28,28 +28,30 @@ public class WaveGenerator : MonoBehaviour
     {
         _timer = waveStages[_currWave].enemyIntervals;
         _enemyCount = waveStages[_currWave].enemyCount;
-        _timer = startTime;
     }
 
     private void Update()
     {
-        if (_timer <= 0)
+        if (gameStarted)
         {
-            if (_enemyCount > 0)
+            if (_timer <= 0)
             {
-                Instantiate(waveStages[_currWave].ReturnRandomEnemy(), transform.position, Quaternion.identity);
-                _timer = waveStages[_currWave].enemyIntervals;
-                _enemyCount--;
+                if (_enemyCount > 0)
+                {
+                    Instantiate(waveStages[_currWave].ReturnRandomEnemy(), transform.position, Quaternion.identity);
+                    _timer = waveStages[_currWave].enemyIntervals;
+                    _enemyCount--;
+                }
+                else
+                {
+                    if (_currWave < waveStages.Length - 1)
+                        _currWave++;
+                    _enemyCount = waveStages[_currWave].enemyCount;
+                }
             }
             else
-            {
-                if (_currWave < waveStages.Length - 1)
-                    _currWave++;
-                _enemyCount = waveStages[_currWave].enemyCount;
-            }
+                _timer -= Time.deltaTime;
         }
-        else
-            _timer -= Time.deltaTime;
 
         wavesText.text = "Wave " + _currWave + "/" + waveStages.Length;
     }

@@ -17,6 +17,12 @@ public class Bullet : MonoBehaviour
             return;
         }
 
+        Vector3 dir = target.transform.position - transform.position;
+        float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Quaternion targetRot = Quaternion.Euler(0, 0, rotZ + 90f);
+
+        transform.localRotation = targetRot;
+
         transform.position = Vector3.MoveTowards(transform.position, target.transform.position, Time.deltaTime * speed);
         float distanceBtwTarget = Vector2.Distance(transform.position, target.transform.position);
         

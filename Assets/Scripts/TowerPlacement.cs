@@ -70,6 +70,15 @@ public class TowerPlacement : MonoBehaviour
             else
                 rend.color = noBuildingColor;
         }
+        else
+        {
+            if (_currTowerGhost != null)
+            {
+                _currTowerGhost.HideRangeIndicator();
+                Destroy(_currTowerGhost.gameObject);
+                _currTowerGhost = null;
+            }
+        }
         #endregion
     }
 

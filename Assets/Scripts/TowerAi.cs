@@ -48,7 +48,7 @@ public class TowerAi : MonoBehaviour
             {
                 if (_timer <= 0)
                 {
-                    Vector3 dir = _target.position - transform.position;
+                    Vector3 dir = _target.transform.position - transform.position;
                     float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                     Quaternion targetRot = Quaternion.Euler(0, 0, rotZ + 90f);
 
@@ -142,7 +142,7 @@ public class TowerAi : MonoBehaviour
 
     public int ReturnSellCost()
     {
-        int sellCost = 0;
+        int sellCost = towerTemplate.towerLevels[0].cost / 2;
         for (int i = 0; i < _currTowerLevel; i++)
         {
             sellCost += towerTemplate.towerLevels[i].cost / 2;
