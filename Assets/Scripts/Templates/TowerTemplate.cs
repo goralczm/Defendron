@@ -6,6 +6,7 @@ public class TowerStage
     public string name;
     public int cost;
     public int health;
+    public int damage;
     public float range;
     public float rateOfFire;
     public Sprite sprite;
@@ -19,11 +20,10 @@ public class TowerTemplate : ScriptableObject
 
     public GameObject CreateTower()
     {
-        GameObject tower = new GameObject();
+        GameObject tower = new GameObject(towerLevels[0].name);
         SpriteRenderer rend = tower.AddComponent<SpriteRenderer>();
         rend.sprite = towerLevels[0].sprite;
         rend.sortingOrder = 5;
-        tower.name = towerLevels[0].name;
         TowerAi towerAiScript = tower.AddComponent<TowerAi>();
         towerAiScript.towerTemplate = this;
         towerAiScript.isBuilding = true;

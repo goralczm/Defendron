@@ -52,7 +52,9 @@ public class TowerAi : MonoBehaviour
                     float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                     Quaternion targetRot = Quaternion.Euler(0, 0, rotZ + 90f);
 
-                    Instantiate(towerTemplate.towerLevels[_currTowerLevel].bullet, transform.position, targetRot).GetComponent<Bullet>().target = _target.GetComponent<EnemyAi>();
+                    Bullet tmpBulletScript = Instantiate(towerTemplate.towerLevels[_currTowerLevel].bullet, transform.position, targetRot).GetComponent<Bullet>();
+                    tmpBulletScript.target = _target.GetComponent<EnemyAi>();
+                    tmpBulletScript.damage = towerTemplate.towerLevels[_currTowerLevel].damage;
                     _audioManager.Play("bullet");
                     _timer = towerTemplate.towerLevels[_currTowerLevel].rateOfFire;
                 }

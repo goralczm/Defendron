@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public EnemyAi target;
     [SerializeField] private float speed;
     [SerializeField] private float range;
-    [SerializeField] private int damage;
+    [HideInInspector] public int damage;
 
     private void Update()
     {
@@ -31,7 +31,8 @@ public class Bullet : MonoBehaviour
             target.health -= damage;
             if (target.health <= 0)
             {
-                GameManager.instance.money += target.reward;
+                GameManager.instance.money += target.enemyTemplate.reward;
+                target.CreateChild();
                 Destroy(target.gameObject);
             }
             Destroy(gameObject);
