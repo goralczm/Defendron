@@ -16,32 +16,42 @@ public class GameManager : MonoBehaviour
 
     public PopupPanel popupPanel;
     public GameObject rangeIndicator;
-    public WaveGenerator waveGenerator;
+    public WaveGenerator[] waveGenerators;
     public Material defaultSpriteMat;
     public Material pixelOutlineMat;
 
     public int health;
     public int money;
 
-    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private CameraController _cameraController;
+    [SerializeField] private Slider healthBar;
     [SerializeField] private TextMeshProUGUI moneyText;
+
+    private void Start()
+    {
+        healthBar.maxValue = health;
+    }
 
     private void Update()
     {
         moneyText.text = money.ToString() + "$";
-        healthText.text = health.ToString();
+        healthBar.value = health;
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
+        _cameraController.TriggerShake();
         if (health <= 0)
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void PlayButton()
     {
-        waveGenerator.gameStarted = true;
+        foreach (WaveGenerator waveGen in waveGenerators)
+        {
+            waveGen.gameStarted = true;
+        }
         Time.timeScale = 1f;
     }
 

@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Blue Proc
   health: 1
   reward: 1
-  speed: 2.4
+  speed: 5.4
   sprite: {fileID: 249284696, guid: fca2b24455ec6e3468db1081fc49d7d4, type: 3}
   child: {fileID: 11400000, guid: 0da92a2752388d743902ee710a52ad81, type: 2}

@@ -8,6 +8,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float minWidth, maxWidth;
     [SerializeField] private float minHeight, maxHeight;
     [SerializeField] private float minCamSize, maxCamSize;
+    [SerializeField] private float startAmount = 0.7f;
+    [SerializeField] private float startDuration = 0.5f;
 
     private PopupPanel _popupPanel;
     private TowerPlacement _towerPlacement;
@@ -15,6 +17,10 @@ public class CameraController : MonoBehaviour
     private float _currMinWidth, _currMaxWidth;
     private float _currMinHeight, _currMaxHeight;
     private float _zoom;
+
+    private Vector3 originalPos;
+    private float shakeAmount = 0;
+    private float shakeDuration = 0;
 
     private void Start()
     {
@@ -25,16 +31,31 @@ public class CameraController : MonoBehaviour
         _currMaxHeight = _zoom + maxHeight;
         _currMinWidth = _zoom - minWidth;
         _currMaxWidth = _zoom + maxWidth;
+        originalPos = transform.localPosition;
     }
     void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        /*if (canMove)
+        {
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
 
-        float scroll = Input.mouseScrollDelta.y;
-        _zoom -= scroll;
-        _zoom = Mathf.Clamp(_zoom, minCamSize, maxCamSize);
-        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, _zoom, Time.deltaTime * cameraSpeed);
+            float scroll = Input.mouseScrollDelta.y;
+            _zoom -= scroll;
+            _zoom = Mathf.Clamp(_zoom, minCamSize, maxCamSize);
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, _zoom, Time.deltaTime * cameraSpeed);
+
+            Vector3 targetPos = new Vector3(Mathf.Clamp(transform.position.x + horizontal, _zoom - _currMinWidth, _currMaxWidth - _zoom), Mathf.Clamp(transform.position.y + vertical, _zoom - _currMinHeight, _currMaxHeight - _zoom), -10);
+            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * cameraSpeed);
+        }*/
+
+        if (shakeDuration > 0)
+        {
+            transform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
+            shakeDuration -= Time.deltaTime;
+        }
+        else
+            transform.localPosition = originalPos;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, 1 << 7);
@@ -59,13 +80,6 @@ public class CameraController : MonoBehaviour
         {
             DeselectTarget();
         }
-
-        Vector3 targetPos = new Vector3(Mathf.Clamp(transform.position.x + horizontal, _zoom - _currMinWidth, _currMaxWidth - _zoom), Mathf.Clamp(transform.position.y + vertical, _zoom - _currMinHeight, _currMaxHeight - _zoom), -10);
-        /*if (_target == null)
-            targetPos = new Vector3(Mathf.Clamp(transform.position.x + horizontal, _zoom - _currMinWidth, _currMaxWidth - _zoom), Mathf.Clamp(transform.position.y + vertical, _zoom - _currMinHeight, _currMaxHeight - _zoom), -10);
-        else
-            targetPos = new Vector3(_target.transform.position.x, _target.transform.position.y, -10);*/
-        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * cameraSpeed);
     }
 
     public void DeselectTarget()
@@ -73,5 +87,11 @@ public class CameraController : MonoBehaviour
         _popupPanel.gameObject.SetActive(false);
         _target.OnDeselectTarget();
         _target = null;
+    }
+
+    public void TriggerShake()
+    {
+        shakeAmount = startAmount;
+        shakeDuration = startDuration;
     }
 }

@@ -28,13 +28,7 @@ public class Bullet : MonoBehaviour
         
         if (distanceBtwTarget <= 0.05f)
         {
-            target.health -= damage;
-            if (target.health <= 0)
-            {
-                GameManager.instance.money += target.enemyTemplate.reward;
-                target.CreateChild();
-                Destroy(target.gameObject);
-            }
+            target.TakeDamage(damage);
             Destroy(gameObject);
         }
         /*Collider2D[] hit = Physics2D.OverlapCircleAll(transform.position, range);

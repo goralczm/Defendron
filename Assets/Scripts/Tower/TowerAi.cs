@@ -152,6 +152,16 @@ public class TowerAi : MonoBehaviour
         return sellCost;
     }
 
+    public TowerStage ReturnCurrentUpgrade()
+    {
+        return towerTemplate.towerLevels[_currTowerLevel];
+    }
+
+    public TowerStage ReturnNextUpgrade()
+    {
+        return _currTowerLevel < towerTemplate.towerLevels.Length - 1 ? towerTemplate.towerLevels[_currTowerLevel + 1] : null;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

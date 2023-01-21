@@ -9,6 +9,7 @@ public class PopupPanel : MonoBehaviour
     public Button sellButton;
     public TextMeshProUGUI upgradeCost;
     public TextMeshProUGUI sellCost;
+    public TextMeshProUGUI upgradesDiffText;
 
     public void PopulateInfo(TowerAi tower)
     {
@@ -24,11 +25,20 @@ public class PopupPanel : MonoBehaviour
         {
             upgradeCost.text = "MAX UPGRADE";
             upgradeButton.interactable = false;
+            upgradesDiffText.text = "";
         }
         else
         {
             upgradeCost.text = "Cost: " + tower.ReturnUpgradeCost() + "$";
             upgradeButton.onClick.AddListener(delegate { tower.UpgradeTower(true); PopulateInfo(tower); });
+
+            TowerStage currentStage = tower.ReturnCurrentUpgrade();
+            TowerStage nextStage = tower.ReturnNextUpgrade();
+
+            upgradesDiffText.text = "Health" + "\n" + currentStage.health + " > " + nextStage.health + "\n" +
+                                    "Damage" + "\n" + currentStage.damage + " > " + nextStage.damage + "\n" +
+                                    "Range" + "\n" + currentStage.range + " > " + nextStage.range + "\n" +
+                                    "Rate of Fire" + "\n" + currentStage.rateOfFire + " > " + nextStage.rateOfFire;
         }
     }
 }

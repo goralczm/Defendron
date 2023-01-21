@@ -20,6 +20,7 @@ public class WaveGenerator : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI wavesText;
     [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private Waypoints waypoints;
     [SerializeField] private WaveStage[] waveStages;
     [HideInInspector] public bool gameStarted;
     
@@ -47,18 +48,19 @@ public class WaveGenerator : MonoBehaviour
                 {
                     EnemyAi enemyAi = Instantiate(enemyPrefab, transform.position, Quaternion.identity).GetComponent<EnemyAi>();
                     enemyAi.PopulateInfo(waveStages[_currWave].enemies[_currEnemyInWave].enemyTemplate);
+                    enemyAi.points = waypoints.points;
                     _timer = waveStages[_currWave].enemyIntervals;
                     _enemyCount--;
                 }
                 else
                 {
-                    if (_currEnemyInWave < waveStages[_currWave].enemies.Length - 1)
+                    if (_currEnemyInWave != waveStages[_currWave].enemies.Length - 1)
                     {
                         _currEnemyInWave++;
                     }
                     else
                     {
-                        if (_currWave < waveStages.Length - 1)
+                        if (_currWave != waveStages.Length - 1)
                             _currWave++;
                         else
                             _currEnemyInWave = 0;
@@ -71,6 +73,6 @@ public class WaveGenerator : MonoBehaviour
                 _timer -= Time.deltaTime;
         }
 
-        wavesText.text = "Wave " + _currWave + "/" + waveStages.Length;
+        wavesText.text = "Wave" + "\n" + (_currWave + 1) + "/" + waveStages.Length;
     }
 }
