@@ -10,7 +10,7 @@ public class TowerButton : MonoBehaviour
     {
         Button button = GetComponent<Button>();
         GetComponent<Image>().sprite = tower.towerLevels[0].sprite;
-        button.onClick.AddListener(delegate { GameManager.instance.GetComponent<TowerPlacement>().BuildTower(tower); });
+        button.onClick.AddListener(delegate { GameManager.instance.GetComponent<TowerManager>().BuildTower(tower); });
         costText.text = tower.towerLevels[0].cost.ToString() + "$";
         Destroy(this);
     }

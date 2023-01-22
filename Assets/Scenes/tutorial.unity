@@ -265,45 +265,10 @@ MonoBehaviour:
   enemyPrefab: {fileID: 856618438626201153, guid: f2e1354c11d55264e9b35f80b34cbf0a, type: 3}
   waypoints: {fileID: 1625024179}
   waveStages:
-  - enemyIntervals: 0.5
-    enemies:
-    - enemyTemplate: {fileID: 11400000, guid: 44ceca3ad68942c48b627869a9b9de4a, type: 2}
-      enemyCount: 35
-    reward: 100
-  - enemyIntervals: 0.2
-    enemies:
-    - enemyTemplate: {fileID: 11400000, guid: 44ceca3ad68942c48b627869a9b9de4a, type: 2}
-      enemyCount: 20
-    reward: 100
-  - enemyIntervals: 1
+  - enemyIntervals: 0.75
     enemies:
     - enemyTemplate: {fileID: 11400000, guid: 44ceca3ad68942c48b627869a9b9de4a, type: 2}
       enemyCount: 25
-    - enemyTemplate: {fileID: 11400000, guid: 0da92a2752388d743902ee710a52ad81, type: 2}
-      enemyCount: 5
-    reward: 0
-  - enemyIntervals: 0.5
-    enemies:
-    - enemyTemplate: {fileID: 11400000, guid: 44ceca3ad68942c48b627869a9b9de4a, type: 2}
-      enemyCount: 35
-    - enemyTemplate: {fileID: 11400000, guid: 0da92a2752388d743902ee710a52ad81, type: 2}
-      enemyCount: 18
-    reward: 100
-  - enemyIntervals: 0.4
-    enemies:
-    - enemyTemplate: {fileID: 11400000, guid: 44ceca3ad68942c48b627869a9b9de4a, type: 2}
-      enemyCount: 5
-    - enemyTemplate: {fileID: 11400000, guid: 0da92a2752388d743902ee710a52ad81, type: 2}
-      enemyCount: 27
-    reward: 100
-  - enemyIntervals: 0.5
-    enemies:
-    - enemyTemplate: {fileID: 11400000, guid: 44ceca3ad68942c48b627869a9b9de4a, type: 2}
-      enemyCount: 15
-    - enemyTemplate: {fileID: 11400000, guid: 0da92a2752388d743902ee710a52ad81, type: 2}
-      enemyCount: 15
-    - enemyTemplate: {fileID: 11400000, guid: bdb4ab5fa747c8149b1a019f589797a8, type: 2}
-      enemyCount: 4
     reward: 100
   gameStarted: 0
 --- !u!4 &245535619

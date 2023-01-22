@@ -1,3 +1,4 @@
+using System.Globalization;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
@@ -35,10 +36,15 @@ public class PopupPanel : MonoBehaviour
             TowerStage currentStage = tower.ReturnCurrentUpgrade();
             TowerStage nextStage = tower.ReturnNextUpgrade();
 
-            upgradesDiffText.text = "Health" + "\n" + currentStage.health + " > " + nextStage.health + "\n" +
-                                    "Damage" + "\n" + currentStage.damage + " > " + nextStage.damage + "\n" +
-                                    "Range" + "\n" + currentStage.range + " > " + nextStage.range + "\n" +
-                                    "Rate of Fire" + "\n" + currentStage.rateOfFire + " > " + nextStage.rateOfFire;
+            upgradesDiffText.text = ReturnFormattedString("Health", currentStage.health, nextStage.health) +
+                                    ReturnFormattedString("Damage", currentStage.damage, nextStage.damage) +
+                                    ReturnFormattedString("Range", currentStage.range, nextStage.range) +
+                                    "Rate of Fire" + "\n" + currentStage.rateOfFire.ToString(CultureInfo.InvariantCulture) + " > " + nextStage.rateOfFire.ToString(CultureInfo.InvariantCulture);
         }
+    }
+
+    private string ReturnFormattedString(string statName, object firstVal, object secondVal)
+    {
+        return statName + "\n" + firstVal + " > " + secondVal + "\n";
     }
 }
