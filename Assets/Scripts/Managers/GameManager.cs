@@ -1,3 +1,5 @@
+using Unity.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -23,6 +25,8 @@ public class GameManager : MonoBehaviour
     public int health;
     public int money;
 
+    public List<TowerCell> towerCells;
+
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private Slider healthBar;
     [SerializeField] private TextMeshProUGUI moneyText;
@@ -30,6 +34,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         healthBar.maxValue = health;
+        towerCells = new List<TowerCell>();
     }
 
     private void Update()
@@ -46,6 +51,17 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public TowerAi CheckCellState(Vector2 cellPos)
+    {
+        for (int i = 0; i < towerCells.Count; i++)
+        {
+            if (towerCells[i].cellPos == cellPos)
+                return towerCells[i].tower;
+        }
+
+        return null;
+    }
+
     public void PlayButton()
     {
         foreach (WaveGenerator waveGen in waveGenerators)
@@ -58,5 +74,21 @@ public class GameManager : MonoBehaviour
     public void SpeedButton()
     {
         Time.timeScale = 2.5f;
+    }
+
+    public void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ReleaseCell(TowerAi tower)
+    {
+        for (int i = 0; i < towerCells.Count; i++)
+        {
+            if (towerCells[i].tower == tower)
+            {
+                towerCells.RemoveAt(i);
+            }
+        }
     }
 }

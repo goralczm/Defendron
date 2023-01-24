@@ -37,31 +37,33 @@ public class TowerAi : MonoBehaviour
         {
             Collider2D hit = Physics2D.OverlapCircle(transform.position, towerTemplate.towerLevels[_currTowerLevel].range, 1 << 8);
             if (hit != null && _target != hit)
+            {
                 _target = hit.transform;
+            }
+            else
+                return;
         }
+
+        float distanceBtwTarget = Vector2.Distance(transform.position, _target.position);
+        if (distanceBtwTarget > towerTemplate.towerLevels[_currTowerLevel].range)
+            _target = null;
         else
         {
-            float distanceBtwTarget = Vector2.Distance(transform.position, _target.position);
-            if (distanceBtwTarget > towerTemplate.towerLevels[_currTowerLevel].range)
-                _target = null;
+            if (_timer <= 0)
+            {
+                Vector3 dir = _target.transform.position - transform.position;
+                float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                Quaternion targetRot = Quaternion.Euler(0, 0, rotZ + 90f);
+
+                Bullet tmpBulletScript = Instantiate(towerTemplate.towerLevels[_currTowerLevel].bullet, transform.position, targetRot).GetComponent<Bullet>();
+                tmpBulletScript.target = _target.GetComponent<EnemyAi>();
+                tmpBulletScript.damage = towerTemplate.towerLevels[_currTowerLevel].damage;
+                _audioManager.Play("bullet");
+                _timer = towerTemplate.towerLevels[_currTowerLevel].rateOfFire;
+            }
             else
             {
-                if (_timer <= 0)
-                {
-                    Vector3 dir = _target.transform.position - transform.position;
-                    float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                    Quaternion targetRot = Quaternion.Euler(0, 0, rotZ + 90f);
-
-                    Bullet tmpBulletScript = Instantiate(towerTemplate.towerLevels[_currTowerLevel].bullet, transform.position, targetRot).GetComponent<Bullet>();
-                    tmpBulletScript.target = _target.GetComponent<EnemyAi>();
-                    tmpBulletScript.damage = towerTemplate.towerLevels[_currTowerLevel].damage;
-                    _audioManager.Play("bullet");
-                    _timer = towerTemplate.towerLevels[_currTowerLevel].rateOfFire;
-                }
-                else
-                {
-                    _timer -= Time.deltaTime;
-                }
+                _timer -= Time.deltaTime;
             }
         }
     }

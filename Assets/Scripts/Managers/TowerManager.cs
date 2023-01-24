@@ -1,5 +1,3 @@
-using Unity.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -21,8 +19,6 @@ public class TowerManager : MonoBehaviour
     [SerializeField] private Color noBuildingColor;
     [SerializeField] private Color ghostColor;
 
-    public List<TowerCell> towerCells;
-
     private Material pixelOutlineMat;
     private Material defaultSpriteMat;
     private PopupPanel _popupPanel;
@@ -37,7 +33,6 @@ public class TowerManager : MonoBehaviour
 
     private void Start()
     {
-        towerCells = new List<TowerCell>();
         _gameManager = GameManager.instance;
         _popupPanel = _gameManager.popupPanel;
         pixelOutlineMat = _gameManager.pixelOutlineMat;
@@ -88,13 +83,10 @@ public class TowerManager : MonoBehaviour
             }
 
             //Checks if current cell is not occupied by other tower
-            for (int i = 0; i < towerCells.Count; i++)
+            if (_gameManager.CheckCellState(cellPos) != null)
             {
-                if (towerCells[i].cellPos == new Vector2(cellPos.x, cellPos.y))
-                {
-                    _currTowerRend.color = noBuildingColor;
-                    return;
-                }
+                _currTowerRend.color = noBuildingColor;
+                return;
             }
 
             _currTowerRend.color = ghostColor;
@@ -110,7 +102,7 @@ public class TowerManager : MonoBehaviour
                 TowerCell occupiedCell = new TowerCell();
                 occupiedCell.tower = newTower;
                 occupiedCell.cellPos = cellPos;
-                towerCells.Add(occupiedCell);
+                _gameManager.towerCells.Add(occupiedCell);
 
                 newTower.isBuilding = false;
                 _currTowerGhost.GetComponent<BoxCollider2D>().enabled = true;
@@ -138,22 +130,20 @@ public class TowerManager : MonoBehaviour
         #region Selecting Tower
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (_currSelectedTower != null)
-            {
-                _currSelectedTower.OnDeselectTarget();
-                _popupPanel.gameObject.SetActive(false);
-            }
-
-            for (int i = 0; i < towerCells.Count; i++)
-            {
-                if (towerCells[i].cellPos == new Vector2(cellPos.x, cellPos.y))
-                    _currSelectedTower = towerCells[i].tower;
-            }
-
-            if (_currSelectedTower == null)
-            {
+            TowerAi _towerInCell = _gameManager.CheckCellState(cellPos);
+            if (_towerInCell == null)
                 return;
+    
+            if (_towerInCell != _currSelectedTower)
+            {
+                if (_currSelectedTower != null)
+                {
+                    _currSelectedTower.OnDeselectTarget();
+                    _popupPanel.gameObject.SetActive(false);
+                }
             }
+            _currSelectedTower = _towerInCell;
+
             _currSelectedTower.OnSelectTarget();
             _popupPanel.PopulateInfo(_currSelectedTower);
             _popupPanel.gameObject.SetActive(true);

@@ -21,6 +21,7 @@ public class WaveGenerator : MonoBehaviour
     [SerializeField] private TextMeshProUGUI wavesText;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Waypoints waypoints;
+    [SerializeField] private bool loopLastWave;
     [SerializeField] private WaveStage[] waveStages;
     [HideInInspector] public bool gameStarted;
     
@@ -47,7 +48,7 @@ public class WaveGenerator : MonoBehaviour
                 if (_enemyCount > 0)
                 {
                     EnemyAi enemyAi = Instantiate(enemyPrefab, transform.position, Quaternion.identity).GetComponent<EnemyAi>();
-                    enemyAi.PopulateInfo(waveStages[_currWave].enemies[_currEnemyInWave].enemyTemplate);
+                    enemyAi.PopulateInfo(waveStages[_currWave].enemies[_currEnemyInWave].enemyTemplate, 0);
                     enemyAi.points = waypoints.points;
                     _timer = waveStages[_currWave].enemyIntervals;
                     _enemyCount--;
@@ -55,9 +56,7 @@ public class WaveGenerator : MonoBehaviour
                 else
                 {
                     if (_currEnemyInWave != waveStages[_currWave].enemies.Length - 1)
-                    {
                         _currEnemyInWave++;
-                    }
                     else
                     {
                         if (_currWave != waveStages.Length - 1)
@@ -65,8 +64,11 @@ public class WaveGenerator : MonoBehaviour
                         else
                             _currEnemyInWave = 0;
                     }
-                    _enemyCount = waveStages[_currWave].enemies[_currEnemyInWave].enemyCount;
-                    _gameManager.money += waveStages[_currWave].reward;
+                    if (loopLastWave)
+                    {
+                        _enemyCount = waveStages[_currWave].enemies[_currEnemyInWave].enemyCount;
+                        _gameManager.money += waveStages[_currWave].reward;
+                    }
                 }
             }
             else
@@ -74,5 +76,10 @@ public class WaveGenerator : MonoBehaviour
         }
 
         wavesText.text = "Wave" + "\n" + (_currWave + 1) + "/" + waveStages.Length;
+    }
+
+    public void GenerateWave()
+    {
+        _enemyCount = waveStages[_currWave].enemies[_currEnemyInWave].enemyCount;
     }
 }

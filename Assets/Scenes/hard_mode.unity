@@ -767,15 +767,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baf33421ca31b74c85fd0fe55b11e70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlinePixelMat: {fileID: 2100000, guid: 8d5aa41a0f5859d4fb71ec112ead8740, type: 2}
-  spriteDefaultMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  cameraSpeed: 15
-  minWidth: -2.25
-  maxWidth: -2.25
-  minHeight: 1
-  maxHeight: 1
-  minCamSize: 3
-  maxCamSize: 9
   startAmount: 0.1
   startDuration: 0.2
 --- !u!114 &519420034
@@ -3593,6 +3584,7 @@ MonoBehaviour:
   wavesText: {fileID: 1876028418}
   enemyPrefab: {fileID: 856618438626201153, guid: f2e1354c11d55264e9b35f80b34cbf0a, type: 3}
   waypoints: {fileID: 378670797}
+  loopLastWave: 0
   waveStages:
   - enemyIntervals: 5
     enemies:
@@ -3846,6 +3838,7 @@ MonoBehaviour:
   wavesText: {fileID: 1876028418}
   enemyPrefab: {fileID: 856618438626201153, guid: f2e1354c11d55264e9b35f80b34cbf0a, type: 3}
   waypoints: {fileID: 1625024179}
+  loopLastWave: 0
   waveStages:
   - enemyIntervals: 0.5
     enemies:
@@ -5440,12 +5433,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8352aef734106854a989e3e216d3bf83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBuilding: 0
   towers:
   - {fileID: 11400000, guid: d4b9eb21ca545f04b987514e73d922e3, type: 2}
-  - {fileID: 11400000, guid: d4b9eb21ca545f04b987514e73d922e3, type: 2}
-  - {fileID: 11400000, guid: d4b9eb21ca545f04b987514e73d922e3, type: 2}
-  - {fileID: 11400000, guid: d4b9eb21ca545f04b987514e73d922e3, type: 2}
-  - {fileID: 11400000, guid: d4b9eb21ca545f04b987514e73d922e3, type: 2}
+  - {fileID: 11400000, guid: 3e993cf8ae1fbcf459627aa096337f7d, type: 2}
   shopUi: {fileID: 1102022142}
   towerButtonPrefab: {fileID: 7089755927519265227, guid: 07be0e0489073914aae081d08fd8fee8, type: 3}
   nodesTilemap: {fileID: 800848573}
@@ -5454,7 +5445,6 @@ MonoBehaviour:
     m_Bits: 192
   noBuildingColor: {r: 0.79607844, g: 0.2901961, b: 0.2901961, a: 0.5882353}
   ghostColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 0.5882353}
-  isBuilding: 0
 --- !u!114 &1551336006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6427,7 +6417,15 @@ PrefabInstance:
     - target: {fileID: 1463934551199361042, guid: 92719b56e92e08749a440e84c8443ab7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 519420033}
+      objectReference: {fileID: 1551336005}
+    - target: {fileID: 1463934551199361042, guid: 92719b56e92e08749a440e84c8443ab7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DeselectTarget
+      objectReference: {fileID: 0}
+    - target: {fileID: 1463934551199361042, guid: 92719b56e92e08749a440e84c8443ab7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TowerManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92719b56e92e08749a440e84c8443ab7, type: 3}
 --- !u!114 &1463934551619854568 stripped

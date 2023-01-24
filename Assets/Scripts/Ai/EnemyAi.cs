@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class EnemyAi : MonoBehaviour
 {
-    public EnemyTemplate enemyTemplate;
-    public Transform[] points;
-    public int health;
+    [HideInInspector] public EnemyTemplate enemyTemplate;
+    [HideInInspector] public Transform[] points;
+    [HideInInspector] public int health;
 
-    private GameManager _gameManager;
-    private SpriteRenderer _spriteRenderer;
-    private int _pointIndex;
+    [HideInInspector] public GameManager _gameManager;
+    [HideInInspector] public SpriteRenderer _spriteRenderer;
+    [HideInInspector] public int _pointIndex;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class EnemyAi : MonoBehaviour
         _gameManager = GameManager.instance;
     }
 
-    private void Update()
+    public virtual void Update()
     {
         transform.position = Vector2.MoveTowards(transform.position, points[_pointIndex].position, enemyTemplate.speed * Time.deltaTime);
         if (transform.position == points[_pointIndex].position)
@@ -31,23 +31,24 @@ public class EnemyAi : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         health -= damage;
         if (health <= 0)
         {
             _gameManager.money += enemyTemplate.reward;
             if (enemyTemplate.child != null)
-                PopulateInfo(enemyTemplate.child);
+                PopulateInfo(enemyTemplate.child, -health);
             else
                 Destroy(gameObject);
         }
     }
 
-    public void PopulateInfo(EnemyTemplate _enemyTemplate)
+    public virtual void PopulateInfo(EnemyTemplate _enemyTemplate, int damage)
     {
         enemyTemplate = _enemyTemplate;
         _spriteRenderer.sprite = enemyTemplate.sprite;
         health = enemyTemplate.health;
+        TakeDamage(damage);
     }
 }
