@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7640312140503972413}
   - component: {fileID: -3618540640253479644}
   m_Layer: 0
-  m_Name: MegaBullet
+  m_Name: Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

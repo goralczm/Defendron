@@ -6,6 +6,7 @@ public class EnemyAi : MonoBehaviour
     [HideInInspector] public Transform[] points;
     [HideInInspector] public int health;
 
+    [HideInInspector] public WaveGenerator _waveGenerator;
     [HideInInspector] public GameManager _gameManager;
     [HideInInspector] public SpriteRenderer _spriteRenderer;
     [HideInInspector] public int _pointIndex;
@@ -26,7 +27,7 @@ public class EnemyAi : MonoBehaviour
             else
             {
                 _gameManager.TakeDamage(enemyTemplate.health);
-                Destroy(gameObject);
+                Die();
             }
         }
     }
@@ -40,8 +41,15 @@ public class EnemyAi : MonoBehaviour
             if (enemyTemplate.child != null)
                 PopulateInfo(enemyTemplate.child, -health);
             else
-                Destroy(gameObject);
+                Die();
         }
+    }
+
+    public void Die()
+    {
+        //Particles
+        _waveGenerator.EnemyDie();
+        Destroy(gameObject);
     }
 
     public virtual void PopulateInfo(EnemyTemplate _enemyTemplate, int damage)

@@ -39,12 +39,12 @@ public class PopupPanel : MonoBehaviour
             upgradesDiffText.text = ReturnFormattedString("Health", currentStage.health, nextStage.health) +
                                     ReturnFormattedString("Damage", currentStage.damage, nextStage.damage) +
                                     ReturnFormattedString("Range", currentStage.range, nextStage.range) +
-                                    "Rate of Fire" + "\n" + currentStage.rateOfFire.ToString(CultureInfo.InvariantCulture) + " > " + nextStage.rateOfFire.ToString(CultureInfo.InvariantCulture);
+                                    ReturnFormattedString("Rate of Fire", currentStage.rateOfFire, nextStage.rateOfFire);
         }
     }
 
-    private string ReturnFormattedString(string statName, object firstVal, object secondVal)
+    private string ReturnFormattedString(string statName, float firstVal, float secondVal)
     {
-        return statName + "\n" + firstVal + " > " + secondVal + "\n";
+        return statName + "\n" + firstVal.ToString(CultureInfo.InvariantCulture) + " > " + secondVal.ToString(CultureInfo.InvariantCulture) + "\n";
     }
 }

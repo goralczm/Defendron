@@ -16,9 +16,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float startAmount = 0.7f;
     [SerializeField] private float startDuration = 0.5f;
 
-    private Vector3 originalPos;
-    private float shakeAmount = 0;
-    private float shakeDuration = 0;
+    private Transform _target;
+    private Vector3 _originalPos;
+    private Vector3 _originalParentPos;
+    private float _shakeAmount = 0;
+    private float _shakeDuration = 0;
 
     private void Start()
     {
@@ -29,7 +31,8 @@ public class CameraController : MonoBehaviour
         _currMinWidth = _zoom - minWidth;
         _currMaxWidth = _zoom + maxWidth;*/
         #endregion
-        originalPos = transform.localPosition;
+        _originalPos = transform.localPosition;
+        _originalParentPos = transform.parent.transform.position;
     }
     void Update()
     {
@@ -49,18 +52,31 @@ public class CameraController : MonoBehaviour
         }*/
         #endregion
 
-        if (shakeDuration > 0)
+        Vector3 targetPos = _target != null ? _target.position : _originalPos;
+        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * 10f);
+
+        if (_shakeDuration > 0)
         {
-            transform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
-            shakeDuration -= Time.deltaTime;
+            transform.parent.transform.position = _originalParentPos + Random.insideUnitSphere * _shakeAmount;
+            _shakeDuration -= Time.deltaTime;
         }
         else
-            transform.localPosition = originalPos;
+            transform.parent.transform.position = _originalParentPos;
     }
 
     public void TriggerShake()
     {
-        shakeAmount = startAmount;
-        shakeDuration = startDuration;
+        _shakeAmount = startAmount;
+        _shakeDuration = startDuration;
+    }
+
+    public void FocusOnTarget(Transform newTarget)
+    {
+        _target = newTarget;
+    }
+
+    public void DefocusTarget()
+    {
+        _target = null;
     }
 }

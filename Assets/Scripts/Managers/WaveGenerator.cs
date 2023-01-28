@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -21,65 +23,72 @@ public class WaveGenerator : MonoBehaviour
     [SerializeField] private TextMeshProUGUI wavesText;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Waypoints waypoints;
-    [SerializeField] private bool loopLastWave;
     [SerializeField] private WaveStage[] waveStages;
-    [HideInInspector] public bool gameStarted;
-    
-    private int _currWave;
-    private int _currEnemyInWave;
-    private int _enemyCount;
-    private float _timer;
+
+    public bool gameStarted;
+    public int enemiesAlive;
 
     private GameManager _gameManager;
+    private int _currWave;
 
     private void Start()
     {
-        _timer = waveStages[_currWave].enemyIntervals;
-        _enemyCount = waveStages[_currWave].enemies[0].enemyCount;
         _gameManager = GameManager.instance;
     }
 
     private void Update()
     {
-        if (gameStarted)
-        {
-            if (_timer <= 0)
-            {
-                if (_enemyCount > 0)
-                {
-                    EnemyAi enemyAi = Instantiate(enemyPrefab, transform.position, Quaternion.identity).GetComponent<EnemyAi>();
-                    enemyAi.PopulateInfo(waveStages[_currWave].enemies[_currEnemyInWave].enemyTemplate, 0);
-                    enemyAi.points = waypoints.points;
-                    _timer = waveStages[_currWave].enemyIntervals;
-                    _enemyCount--;
-                }
-                else
-                {
-                    if (_currEnemyInWave != waveStages[_currWave].enemies.Length - 1)
-                        _currEnemyInWave++;
-                    else
-                    {
-                        if (_currWave != waveStages.Length - 1)
-                            _currWave++;
-                        else
-                            _currEnemyInWave = 0;
-                    }
-                    if (loopLastWave)
-                    {
-                        _enemyCount = waveStages[_currWave].enemies[_currEnemyInWave].enemyCount;
-                        _gameManager.money += waveStages[_currWave].reward;
-                    }
-                }
-            }
-            else
-                _timer -= Time.deltaTime;
-        }
-
         wavesText.text = "Wave" + "\n" + (_currWave + 1) + "/" + waveStages.Length;
     }
 
-    public void GenerateWave()
+    public void EnemyDie()
     {
-        _enemyCount = waveStages[_currWave].enemies[_currEnemyInWave].enemyCount;
+        enemiesAlive--;
+        if (enemiesAlive <= 0)
+            EndWave();
+    }
+
+    public void EndWave()
+    {
+        _currWave++;
+        if (_currWave >= waveStages.Length - 1)
+        {
+            _gameManager.ReloadLevel();
+            return;
+        }
+
+        _gameManager.money += waveStages[_currWave].reward;
+        Time.timeScale = 1f;
+    }
+
+    public void GenerateCurrentWave(bool forceGenerate)
+    {
+        if (!forceGenerate)
+            if (enemiesAlive > 0)
+                return;
+        enemiesAlive = 0;
+        StartCoroutine(GenerateWaveStage(waveStages[_currWave]));
+    }
+
+    IEnumerator GenerateWaveStage(WaveStage wave)
+    {
+        for (int i = 0; i < wave.enemies.Length; i++)
+        {
+            StartCoroutine(GenerateEnemiesInWave(wave.enemies[i], wave.enemyIntervals));
+            yield return new WaitForSeconds(wave.enemies[i].enemyCount * wave.enemyIntervals);
+        }
+    }
+
+    IEnumerator GenerateEnemiesInWave(EnemyInWave enemyInfo, float intervalsBtwEnemies)
+    {
+        enemiesAlive += enemyInfo.enemyCount;
+        for (int i = 0; i < enemyInfo.enemyCount; i++)
+        {
+            EnemyAi enemyAi = Instantiate(enemyPrefab, transform.position, Quaternion.identity).GetComponent<EnemyAi>();
+            enemyAi.PopulateInfo(enemyInfo.enemyTemplate, 0);
+            enemyAi.points = waypoints.points;
+            enemyAi._waveGenerator = this;
+            yield return new WaitForSeconds(intervalsBtwEnemies);
+        }
     }
 }
