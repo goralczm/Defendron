@@ -6,19 +6,25 @@ public class TowerAi : MonoBehaviour
 {
     public TowerTemplate towerTemplate;
 
+    [SerializeField] private GameObject onDestroyEffect;
     [HideInInspector] public bool isBuilding;
+    public int health;
+
     private SpriteRenderer _rangeIndicator;
     private SpriteRenderer _spriteRend;
     private GameManager _gameManager;
     private AudioManager _audioManager;
+    private EffectsManager _effectsManager;
     private Transform _target;
+
     private float _timer;
     private int _currTowerLevel;
 
-    private void Start()
+    private void Awake()
     {
         _gameManager = GameManager.instance;
         _audioManager = _gameManager.GetComponent<AudioManager>();
+        _effectsManager = _gameManager.GetComponent<EffectsManager>();
         _spriteRend = GetComponent<SpriteRenderer>();
     }
 
@@ -79,8 +85,7 @@ public class TowerAi : MonoBehaviour
         if (pay)
             _gameManager.money -= towerTemplate.towerLevels[_currTowerLevel].cost;
         _currTowerLevel++;
-        GetComponent<SpriteRenderer>().sprite = towerTemplate.towerLevels[_currTowerLevel].sprite;
-        name = towerTemplate.towerLevels[_currTowerLevel].name;
+        PopulateInfo(towerTemplate);
         ShowRangeIndicator();
         _audioManager.Play("upgrade");
         return true;
@@ -88,20 +93,28 @@ public class TowerAi : MonoBehaviour
 
     public void DegradeTower()
     {
-        if (_currTowerLevel > 0)
+        if (_currTowerLevel <= 0)
         {
-            _currTowerLevel--;
-            GetComponent<SpriteRenderer>().sprite = towerTemplate.towerLevels[_currTowerLevel].sprite;
-            name = towerTemplate.towerLevels[_currTowerLevel].name;
-            ShowRangeIndicator();
-            _audioManager.Play("degrade");
+            _audioManager.Play("explosion");
+            DestroyTower();
+            return;
         }
+        _currTowerLevel--;
+        PopulateInfo(towerTemplate);
+        ShowRangeIndicator();
+        _audioManager.Play("degrade");
+    }
+
+    public void SellTower()
+    {
+        _audioManager.Play("sell");
+        _gameManager.money += ReturnSellCost();
+        DestroyTower();
     }
 
     public void DestroyTower()
     {
-        _gameManager.money += ReturnSellCost();
-        _audioManager.Play("sell");
+        Instantiate(_effectsManager.effects["explosion"], transform.position, Quaternion.identity);
         HideRangeIndicator();
         Destroy(gameObject);
     }
@@ -164,8 +177,25 @@ public class TowerAi : MonoBehaviour
         return _currTowerLevel < towerTemplate.towerLevels.Length - 1 ? towerTemplate.towerLevels[_currTowerLevel + 1] : null;
     }
 
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+            DegradeTower();
+    }
+
+    public void PopulateInfo(TowerTemplate template)
+    {
+        towerTemplate = template;
+        _spriteRend.sprite = towerTemplate.towerLevels[_currTowerLevel].sprite;
+        name = towerTemplate.towerLevels[_currTowerLevel].name;
+        health = towerTemplate.towerLevels[_currTowerLevel].health;
+    }
+
     private void OnDrawGizmosSelected()
     {
+        if (towerTemplate == null)
+            return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, towerTemplate.towerLevels[_currTowerLevel].range);
     }

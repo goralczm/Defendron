@@ -1,17 +1,12 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TowerCell
-{
-    public TowerAi tower;
-    public Vector2 cellPos;
-}
-
 public class TowerManager : MonoBehaviour
 {
     [HideInInspector] public bool isBuilding;
 
     [SerializeField] private TowerTemplate[] towers;
+    [SerializeField] private GameObject towerPrefab;
     [SerializeField] private Transform shopUi;
     [SerializeField] private GameObject towerButtonPrefab;
     [SerializeField] private Tilemap nodesTilemap;
@@ -68,7 +63,8 @@ public class TowerManager : MonoBehaviour
             //Creating ghost tower if one does not exist
             if (_currTowerGhost == null)
             {
-                _currTowerGhost = _currentTowerTemplate.CreateTower().GetComponent<TowerAi>();
+                _currTowerGhost = Instantiate(towerPrefab, transform.position, Quaternion.identity).GetComponent<TowerAi>();
+                _currTowerGhost.PopulateInfo(_currentTowerTemplate);
                 _currTowerRend = _currTowerGhost.GetComponent<SpriteRenderer>();
                 _currTowerGhost.ShowRangeIndicator();
             }
@@ -97,14 +93,12 @@ public class TowerManager : MonoBehaviour
                 _currTowerRend.color = Color.white;
                 _gameManager.money -= _currentTowerTemplate.towerLevels[0].cost;
 
-                TowerAi newTower = _currTowerGhost.GetComponent<TowerAi>();
-
                 TowerCell occupiedCell = new TowerCell();
-                occupiedCell.tower = newTower;
+                occupiedCell.tower = _currTowerGhost;
                 occupiedCell.cellPos = cellPos;
                 _gameManager.towerCells.Add(occupiedCell);
 
-                newTower.isBuilding = false;
+                _currTowerGhost.isBuilding = false;
                 _currTowerGhost.GetComponent<BoxCollider2D>().enabled = true;
                 _currTowerGhost.HideRangeIndicator();
                 _currTowerGhost = null;

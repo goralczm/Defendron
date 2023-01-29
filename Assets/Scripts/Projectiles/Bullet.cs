@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private GameObject explodeEffect;
+    [SerializeField] private string onDestroyEffect;
     [SerializeField] private float speed;
 
     [HideInInspector] public int damage;
@@ -41,7 +41,6 @@ public class Bullet : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (explodeEffect != null)
-            Instantiate(explodeEffect, transform.position, Quaternion.identity);
+        Instantiate(GameManager.instance.GetComponent<EffectsManager>().effects[onDestroyEffect], transform.position, Quaternion.identity);
     }
 }

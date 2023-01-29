@@ -19,7 +19,7 @@ public class PopupPanel : MonoBehaviour
         upgradeButton.interactable = true;
 
         sellCost.text = tower.ReturnSellCost() + "$";
-        sellButton.onClick.AddListener(delegate { GameManager.instance.ReleaseCell(tower); tower.DestroyTower(); gameObject.SetActive(false); });
+        sellButton.onClick.AddListener(delegate { GameManager.instance.ReleaseCell(tower); tower.SellTower(); gameObject.SetActive(false); });
         towerName.text = tower.name;
 
         if (tower.ReturnUpgradeCost() == 0)

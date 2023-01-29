@@ -69,11 +69,3 @@ MonoBehaviour:
     rateOfFire: 0.001
     sprite: {fileID: 322441408, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
     bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
-  - name: Tower
-    cost: 100
-    health: 55
-    damage: 8
-    range: 6
-    rateOfFire: 0.5
-    sprite: {fileID: 1164897413, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
-    bullet: {fileID: 5600162859373986173, guid: 75c321acf85a02b45a5b8b542f33afa7, type: 3}

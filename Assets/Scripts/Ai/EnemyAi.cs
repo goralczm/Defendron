@@ -8,6 +8,7 @@ public class EnemyAi : MonoBehaviour
 
     [HideInInspector] public WaveGenerator _waveGenerator;
     [HideInInspector] public GameManager _gameManager;
+    [HideInInspector] public EffectsManager _effectsManager;
     [HideInInspector] public SpriteRenderer _spriteRenderer;
     [HideInInspector] public int _pointIndex;
 
@@ -15,6 +16,7 @@ public class EnemyAi : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _gameManager = GameManager.instance;
+        _effectsManager = _gameManager.GetComponent<EffectsManager>();
     }
 
     public virtual void Update()
@@ -45,9 +47,9 @@ public class EnemyAi : MonoBehaviour
         }
     }
 
-    public void Die()
+    public virtual void Die()
     {
-        //Particles
+        Instantiate(_effectsManager.effects[enemyTemplate.onDieEffect], transform.position, Quaternion.identity);
         _waveGenerator.EnemyDie();
         Destroy(gameObject);
     }

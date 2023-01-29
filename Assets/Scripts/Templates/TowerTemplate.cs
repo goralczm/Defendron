@@ -17,20 +17,4 @@ public class TowerStage
 public class TowerTemplate : ScriptableObject
 {
     public TowerStage[] towerLevels;
-
-    public GameObject CreateTower()
-    {
-        GameObject tower = new GameObject(towerLevels[0].name);
-        SpriteRenderer rend = tower.AddComponent<SpriteRenderer>();
-        rend.sprite = towerLevels[0].sprite;
-        rend.sortingOrder = 5;
-        TowerAi towerAiScript = tower.AddComponent<TowerAi>();
-        towerAiScript.towerTemplate = this;
-        towerAiScript.isBuilding = true;
-        tower.AddComponent<BoxCollider2D>().enabled = false;
-        tower.tag = "Tower";
-        tower.layer = 7;
-
-        return tower;
-    }
 }

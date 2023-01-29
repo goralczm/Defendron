@@ -21,7 +21,6 @@ public class WaveStage
 public class WaveGenerator : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI wavesText;
-    [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Waypoints waypoints;
     [SerializeField] private WaveStage[] waveStages;
 
@@ -50,13 +49,13 @@ public class WaveGenerator : MonoBehaviour
 
     public void EndWave()
     {
-        _currWave++;
-        if (_currWave >= waveStages.Length - 1)
+        if (_currWave + 1 >= waveStages.Length - 1)
         {
-            _gameManager.ReloadLevel();
+            //_gameManager.ReloadLevel();
             return;
         }
 
+        _currWave++;
         _gameManager.money += waveStages[_currWave].reward;
         Time.timeScale = 1f;
     }
@@ -84,7 +83,7 @@ public class WaveGenerator : MonoBehaviour
         enemiesAlive += enemyInfo.enemyCount;
         for (int i = 0; i < enemyInfo.enemyCount; i++)
         {
-            EnemyAi enemyAi = Instantiate(enemyPrefab, transform.position, Quaternion.identity).GetComponent<EnemyAi>();
+            EnemyAi enemyAi = Instantiate(enemyInfo.enemyTemplate.enemyPrefab, transform.position, Quaternion.identity).GetComponent<EnemyAi>();
             enemyAi.PopulateInfo(enemyInfo.enemyTemplate, 0);
             enemyAi.points = waypoints.points;
             enemyAi._waveGenerator = this;
