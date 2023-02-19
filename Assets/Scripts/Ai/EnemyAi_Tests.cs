@@ -6,6 +6,7 @@ public class EnemyAi_Tests : EnemyAi
 
     public override void Update()
     {
+        howFar += Time.deltaTime;
         transform.position = Vector2.MoveTowards(transform.position, points[_pointIndex].position, enemyTemplate.speed * Time.deltaTime);
         if (transform.position == points[_pointIndex].position)
         {
@@ -16,7 +17,7 @@ public class EnemyAi_Tests : EnemyAi
         }
     }
 
-    public override void TakeDamage(int damage)
+    public override void TakeDamage(float damage)
     {
         health -= damage;
         if (health <= 0)
@@ -29,7 +30,7 @@ public class EnemyAi_Tests : EnemyAi
         }
     }
 
-    public override void PopulateInfo(EnemyTemplate _enemyTemplate, int damage)
+    public override void PopulateInfo(EnemyTemplate _enemyTemplate, float damage)
     {
         if (_parentTemplate == null)
             _parentTemplate = _enemyTemplate;

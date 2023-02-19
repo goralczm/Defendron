@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eb01531027057641ac016b3fd3f3519, type: 3}
   m_Name: Canon
   m_EditorClassIdentifier: 
+  isLaser: 0
+  towerScript: TowerAi
   towerLevels:
   - name: Basic Canon
     cost: 150

@@ -6,7 +6,7 @@ public class TowerStage
     public string name;
     public int cost;
     public int health;
-    public int damage;
+    public float damage;
     public float range;
     public float rateOfFire;
     public Sprite sprite;
@@ -16,5 +16,6 @@ public class TowerStage
 [CreateAssetMenu(menuName = "Tower/Basic Tower")]
 public class TowerTemplate : ScriptableObject
 {
+    public string towerScript;
     public TowerStage[] towerLevels;
 }

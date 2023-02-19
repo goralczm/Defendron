@@ -8,6 +8,8 @@ public class EnemyTemplate : ScriptableObject
     public int reward;
     public int damage;
     public float speed;
+    public bool isBoss;
+    public int difficultyLevel;
     public Sprite sprite;
     public EnemyTemplate child;
     public string onDieEffect;

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Rocket : Bullet
 {
-    [SerializeField] private float range;
+    [SerializeField] private float explosionRange;
 
     public override void DamageTarget()
     {
-        Collider2D[] hit = Physics2D.OverlapCircleAll(transform.position, range);
+        Collider2D[] hit = Physics2D.OverlapCircleAll(transform.position, explosionRange);
         for (int i = 0; i < hit.Length; i++)
         {
             if (hit[i].tag == "Enemy")
@@ -23,6 +23,6 @@ public class Rocket : Bullet
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, explosionRange);
     }
 }

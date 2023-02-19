@@ -9,18 +9,21 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float minCamSize, maxCamSize;
 
     private float _currMinWidth, _currMaxWidth;
-    private float _currMinHeight, _currMaxHeight;
-    private float _zoom;*/
+    private float _currMinHeight, _currMaxHeight;*/
     #endregion
 
     [SerializeField] private float startAmount = 0.7f;
     [SerializeField] private float startDuration = 0.5f;
+    [SerializeField] private float minZoom;
 
     private Transform _target;
     private Vector3 _originalPos;
     private Vector3 _originalParentPos;
     private float _shakeAmount = 0;
     private float _shakeDuration = 0;
+    private float _startZoom;
+    private float _zoom;
+    private bool _canShake;
 
     private void Start()
     {
@@ -31,8 +34,11 @@ public class CameraController : MonoBehaviour
         _currMinWidth = _zoom - minWidth;
         _currMaxWidth = _zoom + maxWidth;*/
         #endregion
-        _originalPos = transform.localPosition;
+        _originalPos = transform.position;
         _originalParentPos = transform.parent.transform.position;
+        _startZoom = Camera.main.orthographicSize;
+        _zoom = _startZoom;
+        _canShake = true;
     }
     void Update()
     {
@@ -52,8 +58,23 @@ public class CameraController : MonoBehaviour
         }*/
         #endregion
 
-        Vector3 targetPos = _target != null ? _target.position : _originalPos;
-        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * 10f);
+        //Position
+        Vector3 targetPos = _target != null ? new Vector3(_target.position.x, _target.position.y, -10) : _originalPos;
+        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 7f);
+
+        //Rotation
+        Quaternion targetRot = _target != null ? Quaternion.Euler(0, 0, -15f) : Quaternion.identity;
+        transform.rotation = Quaternion.Slerp(transform.localRotation, targetRot, Time.deltaTime * 7f);
+
+        //Zoom
+        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, _zoom, Time.deltaTime * 15f);
+
+        //Shake
+        if (!_canShake)
+        {
+            _shakeDuration = 0;
+            return;
+        }
 
         if (_shakeDuration > 0)
         {
@@ -73,10 +94,14 @@ public class CameraController : MonoBehaviour
     public void FocusOnTarget(Transform newTarget)
     {
         _target = newTarget;
+        _zoom = minZoom;
+        _canShake = false;
     }
 
     public void DefocusTarget()
     {
         _target = null;
+        _zoom = _startZoom;
+        _canShake = true;
     }
 }

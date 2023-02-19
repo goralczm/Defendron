@@ -23,9 +23,13 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public GameObject menu;
+    public GameObject pauseMenu;
+    public GameObject settingsMenu;
     public PopupPanel popupPanel;
     public GameObject rangeIndicator;
     public WaveGenerator[] waveGenerators;
+    public TowerManager towerManager;
     public Material defaultSpriteMat;
     public Material pixelOutlineMat;
 
@@ -36,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private Slider healthBar;
+    [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI moneyText;
 
     private void Start()
@@ -48,11 +53,12 @@ public class GameManager : MonoBehaviour
     {
         moneyText.text = money.ToString() + "$";
         healthBar.value = health;
+        healthText.text = health.ToString() + "/" + 100;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
-        health -= damage;
+        health -= (int)damage;
         _cameraController.TriggerShake();
         if (health <= 0)
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -71,9 +77,15 @@ public class GameManager : MonoBehaviour
 
     public void PlayButton()
     {
-        foreach (WaveGenerator waveGen in waveGenerators)
+        for (int i = 0; i < waveGenerators.Length; i++)
         {
-            waveGen.gameStarted = true;
+            if (!waveGenerators[i].CanStartWave())
+                return;
+        }
+
+        for (int i = 0; i < waveGenerators.Length; i++)
+        {
+            waveGenerators[i].GenerateCurrentWave();
         }
         Time.timeScale = 1f;
     }
@@ -108,6 +120,25 @@ public class GameManager : MonoBehaviour
                 towerCells.RemoveAt(i);
             }
         }
+    }
+
+    public void PauseGame()
+    {
+        if (Time.timeScale == 0)
+        {
+            ResumeGame();
+            return;
+        }
+        menu.gameObject.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void ResumeGame()
+    {
+        menu.SetActive(false);
+        pauseMenu.SetActive(true);
+        settingsMenu.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     public List<TowerAi> ReturnNearbyTowers(Vector2 pos, int distance)

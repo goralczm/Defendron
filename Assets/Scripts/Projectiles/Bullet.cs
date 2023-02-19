@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public float speed;
     [SerializeField] private string onDestroyEffect;
-    [SerializeField] private float speed;
 
-    [HideInInspector] public int damage;
+    [HideInInspector] public float damage;
+    [HideInInspector] public float range;
     [HideInInspector] public EnemyAi target;
 
     public virtual void Update()
     {
         if (target == null)
         {
-            Destroy(gameObject);
+            DestroyBullet();
             return;
         }
 
@@ -33,14 +34,23 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    public virtual void PopulateInfo(EnemyAi newTarget, float newDamage, float newRange)
+    {
+        target = newTarget;
+        damage = newDamage;
+        range = newRange;
+    }
+
     public virtual void DamageTarget()
     {
         target.TakeDamage(damage);
-        Destroy(gameObject);
+        DestroyBullet();
     }
 
-    private void OnDestroy()
+    public virtual void DestroyBullet()
     {
-        Instantiate(GameManager.instance.GetComponent<EffectsManager>().effects[onDestroyEffect], transform.position, Quaternion.identity);
+        if (GameManager.instance != null && onDestroyEffect != "")
+            Instantiate(GameManager.instance.GetComponent<EffectsManager>().effects[onDestroyEffect], transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

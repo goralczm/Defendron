@@ -24,6 +24,7 @@ public class Sound
 public class AudioManager : MonoBehaviour
 {
     public AudioMixerGroup audioMixerGroup;
+    public AudioMixer masterMixer;
     public Sound[] sounds;
 
     private void Awake()

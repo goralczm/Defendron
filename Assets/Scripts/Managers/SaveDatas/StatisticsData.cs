@@ -1,5 +1,5 @@
 [System.Serializable]
-public class PlayerStatistics
+public class StatisticsData
 {
     public int procsDestroyed;
     public int towersPlaced;
@@ -7,7 +7,7 @@ public class PlayerStatistics
     public int wavesCompleted;
     public int looses;
 
-    public PlayerStatistics(StatisticsManager stats)
+    public StatisticsData(StatisticsManager stats)
     {
         procsDestroyed = stats.procsDestroyed;
         towersPlaced = stats.towersPlaced;

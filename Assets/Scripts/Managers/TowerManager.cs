@@ -11,11 +11,10 @@ public class TowerManager : MonoBehaviour
     [SerializeField] private GameObject towerButtonPrefab;
     [SerializeField] private Tilemap nodesTilemap;
     [SerializeField] private LayerMask buildingLayers;
+    [SerializeField] private Color freezingColor;
     [SerializeField] private Color noBuildingColor;
     [SerializeField] private Color ghostColor;
 
-    private Material pixelOutlineMat;
-    private Material defaultSpriteMat;
     private PopupPanel _popupPanel;
     private TowerAi _currSelectedTower;
 
@@ -30,8 +29,6 @@ public class TowerManager : MonoBehaviour
     {
         _gameManager = GameManager.instance;
         _popupPanel = _gameManager.popupPanel;
-        pixelOutlineMat = _gameManager.pixelOutlineMat;
-        defaultSpriteMat = _gameManager.defaultSpriteMat;
         _audioManager = _gameManager.GetComponent<AudioManager>();
         foreach (TowerTemplate tower in towers)
         {
@@ -42,14 +39,6 @@ public class TowerManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            isBuilding = false;
-
-        if (Input.GetKeyDown(KeyCode.Escape) && _currSelectedTower != null)
-        {
-            DeselectTarget();
-        }
-
         #region Accessing cell position based on mouse position
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, buildingLayers);
@@ -63,10 +52,14 @@ public class TowerManager : MonoBehaviour
             //Creating ghost tower if one does not exist
             if (_currTowerGhost == null)
             {
-                _currTowerGhost = Instantiate(towerPrefab, transform.position, Quaternion.identity).GetComponent<TowerAi>();
+                System.Type scriptType = System.Type.GetType(_currentTowerTemplate.towerScript);
+                GameObject tmpTower = Instantiate(towerPrefab, transform.position, Quaternion.identity);
+                tmpTower.AddComponent(scriptType);
+                _currTowerGhost = tmpTower.GetComponent<TowerAi>();
                 _currTowerGhost.PopulateInfo(_currentTowerTemplate);
                 _currTowerRend = _currTowerGhost.GetComponent<SpriteRenderer>();
                 _currTowerGhost.ShowRangeIndicator();
+                _currTowerGhost.isBuilding = true;
             }
             
             _currTowerGhost.transform.position = new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0);
@@ -86,6 +79,7 @@ public class TowerManager : MonoBehaviour
             }
 
             _currTowerRend.color = ghostColor;
+            _currTowerRend.sortingOrder = -(int)cellPos.y + 17;
 
             #region Building Tower
             if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -148,6 +142,9 @@ public class TowerManager : MonoBehaviour
     public void DeselectTarget()
     {
         _popupPanel.gameObject.SetActive(false);
+
+        if (_currSelectedTower == null)
+            return;
         _currSelectedTower.OnDeselectTarget();
         _currSelectedTower = null;
     }
