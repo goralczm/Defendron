@@ -11,6 +11,8 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public float range;
     [HideInInspector] public EnemyAi target;
 
+    public bool replicateEffect;
+
     public virtual void Update()
     {
         if (target == null)
@@ -43,14 +45,19 @@ public class Bullet : MonoBehaviour
 
     public virtual void DamageTarget()
     {
+        if (target == null)
+            return;
+
         target.TakeDamage(damage);
         DestroyBullet();
     }
 
     public virtual void DestroyBullet()
     {
-        if (GameManager.instance != null && onDestroyEffect != "")
-            Instantiate(GameManager.instance.GetComponent<EffectsManager>().effects[onDestroyEffect], transform.position, Quaternion.identity);
+        if (replicateEffect)
+            Debug.Log("REPLICATE");
+
+        EffectsManager.instance.PlayEffect("bullet_impact", transform.position);
         Destroy(gameObject);
     }
 }

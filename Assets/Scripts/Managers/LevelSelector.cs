@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 [System.Serializable]
 public class Act
@@ -14,26 +15,52 @@ public class Act
     public bool completed;
 }
 
+[System.Serializable]
+public class LevelData
+{
+    public string levelName = "";
+    public bool completed;
+}
+
 public class LevelSelector : MonoBehaviour
 {
     public List<Act> acts;
+    public LevelData[] levelsData;
 
     private void Start()
     {
-        for (int i = 0; i < acts.Count; i++)
-        {
-            acts[i].actTitle.text = "Act " + i + " - " + acts[i].name;
+        levelsData = new LevelData[5 * 10];
 
-            Button[] buttons = acts[i].levelsParent.GetComponentsInChildren<Button>();
-            for (int j = 0; j < buttons.Length; j++)
+        for (int i = 1; i <= acts.Count; i++)
+        {
+            acts[i - 1].actTitle.text = "Act " + i + " - " + acts[i - 1].name;
+
+            Button[] buttons = acts[i - 1].levelsParent.GetComponentsInChildren<Button>();
+            for (int j = 1; j <= buttons.Length; j++)
             {
-                buttons[j].onClick.RemoveAllListeners();
-                string levelName = "act" + i + "_level" + (j + 1).ToString();
-                buttons[j].onClick.AddListener(delegate { TransitionManager.instance.ChangeScene(levelName); });
+                buttons[j - 1].onClick.RemoveAllListeners();
+                string levelName = "act" + i + "_level" + j;
+                buttons[j - 1].onClick.AddListener(delegate { TransitionManager.instance.ChangeScene(levelName); });
+
+                if (j == 1)
+                {
+                    if (i == 1)
+                    {
+                        buttons[j - 1].interactable = true;
+                        continue;
+                    }
+
+                    string previousAct = "act" + (i - 1).ToString();
+                    buttons[j - 1].interactable = Convert.ToBoolean(PlayerPrefs.GetInt(previousAct, 0));
+                    continue;
+                }
+
+                string previousLevel = "act" + i + "_level" + (j - 1).ToString();
+                buttons[j - 1].interactable = Convert.ToBoolean(PlayerPrefs.GetInt(previousLevel, 0));
             }
 
-            if (i > 0 && !acts[i - 1].completed)
-                acts[i].lockedPanel.SetActive(true);
+            if (i > 1 && !Convert.ToBoolean(PlayerPrefs.GetInt("act" + (i - 2).ToString())))
+                acts[i - 1].lockedPanel.SetActive(true);
         }
     }
 }

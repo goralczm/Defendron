@@ -13,6 +13,9 @@ public class Rocket : Bullet
         {
             if (hit[i].tag == "Enemy")
             {
+                if (hit[i] == null)
+                    continue;
+
                 EnemyAi enemy = hit[i].gameObject.GetComponent<EnemyAi>();
                 enemy.TakeDamage(damage);
             }

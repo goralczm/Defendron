@@ -1,23 +1,34 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(TowerAi))]
+[CustomEditor(typeof(Tower))]
 public class TowerEditor : Editor
 {
+    Module module;
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
-        TowerAi towerAi = (TowerAi)target;
+        Tower towerAi = (Tower)target;
 
         if (GUILayout.Button("Upgrade Tower"))
         {
-            towerAi.UpgradeTower(false);
+            towerAi.UpgradeTower();
         }
 
         if (GUILayout.Button("Degrade Tower"))
         {
             towerAi.DegradeTower();
+        }
+
+        GUILayout.Label("Upgrade", EditorStyles.boldLabel);
+
+        module = EditorGUILayout.ObjectField("Module", module, typeof(ScriptableObject), true) as Module;
+
+        if (GUILayout.Button("Submit"))
+        {
+            towerAi.MountUpgrade(module);
         }
     }
 }

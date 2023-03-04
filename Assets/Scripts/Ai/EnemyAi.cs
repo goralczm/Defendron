@@ -1,60 +1,58 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAi : MonoBehaviour
 {
     public float currentSpeed;
     public float startSpeed;
-    [HideInInspector] public EnemyTemplate enemyTemplate;
-    [HideInInspector] public Transform[] points;
     public float health;
     public float howFar;
 
-    [HideInInspector] public bool isLastEnemy;
+    [HideInInspector] public EnemyTemplate enemyTemplate;
+    [HideInInspector] public List<Point> points;
     [HideInInspector] public WaveGenerator _waveGenerator;
-    [HideInInspector] public GameManager _gameManager;
-    [HideInInspector] public EffectsManager _effectsManager;
-    [HideInInspector] public SpriteRenderer _spriteRenderer;
-    [HideInInspector] public int _pointIndex;
+    [HideInInspector] public Transform healthBar;
+
+    private GameManager _gameManager;
+    private EffectsManager _effectsManager;
+    private SpriteRenderer _spriteRenderer;
+    private Point currTargetPoint;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _gameManager = GameManager.instance;
-        _effectsManager = _gameManager.GetComponent<EffectsManager>();
+        _effectsManager = EffectsManager.instance;
+        healthBar = transform.GetChild(0).transform;
     }
 
-    public virtual void Update()
+    public void Update()
     {
         howFar = CalculateDistanceFromStart();
-        transform.position = Vector2.MoveTowards(transform.position, points[_pointIndex].position, currentSpeed * Time.deltaTime);
-        if (transform.position == points[_pointIndex].position)
+        currTargetPoint = GetNextPoint();
+        transform.position = Vector2.MoveTowards(transform.position, currTargetPoint.waypoint.position, currentSpeed * Time.deltaTime);
+        if (transform.position == points[points.Count - 1].waypoint.position)
         {
-            if (_pointIndex != points.Length - 1)
-                _pointIndex++;
-            else
-            {
-                _gameManager.TakeDamage(health);
-                Die();
-            }
+            _gameManager.TakeDamage(ReturnLeftHealth());
+            Die();
         }
+
+
+        if (enemyTemplate.isBoss)
+            healthBar.localScale = new Vector3(health / enemyTemplate.health * 0.8f, healthBar.localScale.y, 1);
     }
 
     private float CalculateDistanceFromStart()
     {
-        if (_pointIndex == 0)
+        if (currTargetPoint == null)
             return 0;
 
-        float distance = 0;
-        for (int i = 1; i < _pointIndex; i++)
-        {
-            distance += Vector2.Distance(points[i - 1].position, points[i].position);
-        }
-        distance += Vector2.Distance(points[_pointIndex - 1].position, transform.position);
+        float distance = points[points.IndexOf(currTargetPoint)].distance - Vector2.Distance(currTargetPoint.waypoint.position, transform.position);
 
         return distance;
     }
 
-    public virtual void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         health -= damage;
         if (health <= 0)
@@ -67,7 +65,7 @@ public class EnemyAi : MonoBehaviour
         }
     }
 
-    public virtual void PopulateInfo(EnemyTemplate _enemyTemplate, float damage)
+    public void PopulateInfo(EnemyTemplate _enemyTemplate, float damage)
     {
         enemyTemplate = _enemyTemplate;
         _spriteRenderer.sprite = enemyTemplate.sprite;
@@ -77,9 +75,48 @@ public class EnemyAi : MonoBehaviour
         TakeDamage(damage);
     }
 
-    public virtual void Die()
+    public float ReturnLeftHealth()
     {
-        Instantiate(_effectsManager.effects[enemyTemplate.onDieEffect], transform.position, Quaternion.identity);
+        float healthLeft = health;
+
+        EnemyTemplate currTemplate = enemyTemplate;
+        while (currTemplate.child != null)
+        {
+            healthLeft += currTemplate.child.health;
+            currTemplate = currTemplate.child;
+        }
+
+        return healthLeft;
+    }
+
+    private Point GetNextPoint()
+    {
+        foreach (Point point in points)
+        {
+            if (point.distance > howFar)
+                return point;
+        }
+
+        return null;
+    }
+
+    public void SetNextPoint(Transform nextPoint)
+    {
+        foreach (Point point in points)
+        {
+            if (point.waypoint == nextPoint)
+            {
+                currTargetPoint = point;
+                return;
+            }
+        }
+    }
+
+    public void Die()
+    {
+        if (enemyTemplate == null)
+            return;
+        _effectsManager.PlayEffect(enemyTemplate.onDieEffect, transform.position);
         _waveGenerator.enemiesAlive.Remove(transform);
         Destroy(gameObject);
     }

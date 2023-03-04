@@ -97,7 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164e14fa502293944aa3a50d84411804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 45
   onDestroyEffect: bullet_impact
-  speed: 15
   damage: 1
+  range: 0
   target: {fileID: 0}
+  replicateEffect: 0

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b4fde1511b5b544982edbffab92b75, type: 3}
+  m_Name: Area Denial 1
+  m_EditorClassIdentifier: 
+  name: Area Denial
+  description: Basic module that increases range by 1
+  towerTypes: 3
+  icon: {fileID: 21300000, guid: c1d8a0859c27e5d4bb7d90471a63b8c2, type: 3}
+  tier: 1
+  sortId: 1
+  health: 0
+  damage: 0
+  range: 1
+  rateOfFire: 0
+  shootMultiplier: 0
+  script: 
+  projectile: {fileID: 0}

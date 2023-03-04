@@ -23,7 +23,6 @@ public class FlexibleGridLayout
 	public bool fitY;
 
 	public bool squareCell;
-	public bool center;
 
 	public override void CalculateLayoutInputHorizontal()
 	{
@@ -56,7 +55,8 @@ public class FlexibleGridLayout
 		float cellHeight = (parentHeight - (spacing.y * (rows - 1)) - padding.top - padding.bottom) / rows;
 
 		cellSize.x = fitX ? cellWidth : cellSize.x;
-		cellSize.y = squareCell ? cellSize.x : fitY ? cellHeight : cellSize.y;
+		//cellSize.x = fitY ? cellHeight : cellSize.y;
+		cellSize.y = squareCell ? cellSize.x : (fitY ? cellHeight : cellSize.y);
 
 		int columnCount = 0;
 		int rowCount = 0;

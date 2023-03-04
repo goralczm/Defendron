@@ -26,6 +26,9 @@ public class Piercing : Bullet
         {
             if (!enemiesHit.Contains(hit.transform))
             {
+                if (hit == null)
+                    continue;
+
                 hit.GetComponent<EnemyAi>().TakeDamage(damage);
                 enemiesHit.Add(hit.transform);
                 break;

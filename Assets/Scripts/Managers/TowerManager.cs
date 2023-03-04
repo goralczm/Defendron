@@ -1,10 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using TMPro;
+using UnityEngine.UI;
 
 public class TowerManager : MonoBehaviour
 {
     [HideInInspector] public bool isBuilding;
+    [HideInInspector] public Dictionary<Module, int> sortingOrder;
+    public List<Module> modulesOrder;
+    public List<Module> availableModules;
 
+    [SerializeField] private TextMeshProUGUI towerNameText;
     [SerializeField] private TowerTemplate[] towers;
     [SerializeField] private GameObject towerPrefab;
     [SerializeField] private Transform shopUi;
@@ -16,13 +23,12 @@ public class TowerManager : MonoBehaviour
     [SerializeField] private Color ghostColor;
 
     private PopupPanel _popupPanel;
-    private TowerAi _currSelectedTower;
-
+    private Tower _currSelectedTower;
 
     private GameManager _gameManager;
     private AudioManager _audioManager;
     private TowerTemplate _currentTowerTemplate;
-    private TowerAi _currTowerGhost;
+    private Tower _currTowerGhost;
     private SpriteRenderer _currTowerRend;
 
     private void Start()
@@ -30,10 +36,20 @@ public class TowerManager : MonoBehaviour
         _gameManager = GameManager.instance;
         _popupPanel = _gameManager.popupPanel;
         _audioManager = _gameManager.GetComponent<AudioManager>();
+
         foreach (TowerTemplate tower in towers)
         {
             GameObject tmp = Instantiate(towerButtonPrefab, shopUi);
             tmp.GetComponent<TowerButton>().Setup(tower);
+        }
+
+        sortingOrder = new Dictionary<Module, int>();
+
+        for (int i = 0; i < modulesOrder.Count; i++)
+        {
+            if (!sortingOrder.ContainsKey(modulesOrder[i]))
+                sortingOrder.Add(modulesOrder[i], i);
+            availableModules.Add(modulesOrder[i]);
         }
     }
 
@@ -52,14 +68,20 @@ public class TowerManager : MonoBehaviour
             //Creating ghost tower if one does not exist
             if (_currTowerGhost == null)
             {
-                System.Type scriptType = System.Type.GetType(_currentTowerTemplate.towerScript);
-                GameObject tmpTower = Instantiate(towerPrefab, transform.position, Quaternion.identity);
+                System.Type scriptType = System.Type.GetType(_currentTowerTemplate.script);
+
+                GameObject newTowerPrefab = towerPrefab;
+                if (_currentTowerTemplate.specialPrefab != null)
+                    newTowerPrefab = _currentTowerTemplate.specialPrefab;
+
+                GameObject tmpTower = Instantiate(newTowerPrefab, transform.position, Quaternion.identity);
                 tmpTower.AddComponent(scriptType);
-                _currTowerGhost = tmpTower.GetComponent<TowerAi>();
+                _currTowerGhost = tmpTower.GetComponent<Tower>();
                 _currTowerGhost.PopulateInfo(_currentTowerTemplate);
                 _currTowerRend = _currTowerGhost.GetComponent<SpriteRenderer>();
                 _currTowerGhost.ShowRangeIndicator();
                 _currTowerGhost.isBuilding = true;
+                towerNameText.text = _currentTowerTemplate.name;
             }
             
             _currTowerGhost.transform.position = new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0);
@@ -85,7 +107,7 @@ public class TowerManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 _currTowerRend.color = Color.white;
-                _gameManager.money -= _currentTowerTemplate.towerLevels[0].cost;
+                _gameManager.money -= _currentTowerTemplate.levels[0].cost;
 
                 TowerCell occupiedCell = new TowerCell();
                 occupiedCell.tower = _currTowerGhost;
@@ -118,7 +140,7 @@ public class TowerManager : MonoBehaviour
         #region Selecting Tower
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            TowerAi _towerInCell = _gameManager.CheckCellState(cellPos);
+            Tower _towerInCell = _gameManager.CheckCellState(cellPos);
             if (_towerInCell == null)
                 return;
     
@@ -151,8 +173,17 @@ public class TowerManager : MonoBehaviour
 
     public void BuildTower(TowerTemplate towerTemplate)
     {
-        if (towerTemplate.towerLevels[0].cost > _gameManager.money)
+        if (towerTemplate.levels[0].cost > _gameManager.money)
             return;
+
+        if (_currTowerGhost != null)
+        {
+            _currTowerGhost.HideRangeIndicator();
+            Destroy(_currTowerGhost.gameObject);
+            _currTowerGhost = null;
+            _currTowerRend = null;
+        }
+
         _audioManager.Play("select");
         _currentTowerTemplate = towerTemplate;
         isBuilding = true;

@@ -20,7 +20,7 @@ public class SpaceSelectorButtons : MonoBehaviour
                 yPos = -30f;
 
             transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(xPos, yPos);
-            xPos += 100;
+            xPos += 90;
         }
     }
 }

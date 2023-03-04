@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
@@ -8,51 +9,137 @@ public class PopupPanel : MonoBehaviour
     public TextMeshProUGUI towerName;
     public Button upgradeButton;
     public Button sellButton;
-    public TextMeshProUGUI upgradeCost;
+    public TextMeshProUGUI upgradeCostText;
     public TextMeshProUGUI sellCost;
     public TextMeshProUGUI upgradesDiffText;
     public Button targetingButtonLeft;
     public Button targetingButtonRight;
     public TextMeshProUGUI currentTargetingOption;
+    public ModuleSlot lastModuleButton;
+    public List<ModuleSlot> moduleSlots;
 
-    public void PopulateInfo(TowerAi tower)
+    public GameObject moduleSlotPrefab;
+    public ModulePopup modulesPopup;
+    private TowerManager _towerManager;
+    public Tower selectedTower;
+
+    public void PopulateInfo(Tower tower)
     {
-        upgradeButton.onClick.RemoveAllListeners();
-        sellButton.onClick.RemoveAllListeners();
-        targetingButtonLeft.onClick.RemoveAllListeners();
-        targetingButtonRight.onClick.RemoveAllListeners();
+        if (_towerManager == null)
+            _towerManager = GameManager.instance.GetComponent<TowerManager>();
+
+        selectedTower = tower;
+        modulesPopup.gameObject.SetActive(false);
+
         currentTargetingOption.text = tower.howToSelectTarget.ToString();
-        upgradeButton.interactable = true;
+        sellCost.text = tower.ReturnSellCost().ToString();
+        towerName.text = tower.transform.name;
 
-        sellCost.text = tower.ReturnSellCost() + "$";
-        sellButton.onClick.AddListener(delegate { GameManager.instance.ReleaseCell(tower); tower.SellTower(); gameObject.SetActive(false); });
-        targetingButtonLeft.onClick.AddListener(delegate { tower.ChangeEnemyTargeting(false); currentTargetingOption.text = tower.howToSelectTarget.ToString(); });
-        targetingButtonRight.onClick.AddListener(delegate { tower.ChangeEnemyTargeting(true); currentTargetingOption.text = tower.howToSelectTarget.ToString(); });
-        towerName.text = tower.name;
+        RefreshModuleSlots();
 
-        if (tower.ReturnUpgradeCost() == 0)
+        UpdateAvailableModules();
+
+        int upgradeCost = tower.ReturnUpgradeCost();
+        if (upgradeCost == 0)
         {
-            upgradeCost.text = "MAX UPGRADE";
+            upgradeCostText.text = "MAX UPGRADE";
             upgradeButton.interactable = false;
-            upgradesDiffText.text = "";
+            upgradesDiffText.text = tower.DisplayStats();
         }
         else
         {
-            upgradeCost.text = "Cost: " + tower.ReturnUpgradeCost() + "$";
-            upgradeButton.onClick.AddListener(delegate { tower.UpgradeTower(true); tower.ShowRangeIndicator(); PopulateInfo(tower); });
-
-            TowerStage currentStage = tower.ReturnCurrentUpgrade();
-            TowerStage nextStage = tower.ReturnNextUpgrade();
-
-            upgradesDiffText.text = ReturnFormattedString("Health", currentStage.health, nextStage.health) +
-                                    ReturnFormattedString("Damage", currentStage.damage, nextStage.damage) +
-                                    ReturnFormattedString("Range", currentStage.range, nextStage.range) +
-                                    ReturnFormattedString("Rate of Fire", currentStage.rateOfFire, nextStage.rateOfFire);
+            upgradeCostText.text = "Cost: " + upgradeCost;
+            upgradeButton.interactable = true;
+            upgradesDiffText.text = tower.DisplayUpgradeStats();
         }
     }
 
-    private string ReturnFormattedString(string statName, float firstVal, float secondVal)
+    public void UpgradeButton()
     {
-        return statName + "\n" + firstVal.ToString(CultureInfo.InvariantCulture) + " > " + secondVal.ToString(CultureInfo.InvariantCulture) + "\n";
+        selectedTower.UpgradeTower();
+        PopulateInfo(selectedTower);
+    }
+
+    public void SellButton()
+    {
+        for (int i = selectedTower.upgrades.Count - 1; i >= 0; i--)
+        {
+            DemountUpgrade(selectedTower.upgrades[i]);
+        }
+        selectedTower.SellTower();
+        gameObject.SetActive(false);
+    }
+
+    public void EnemyTargetingButton(bool next)
+    {
+        selectedTower.ChangeEnemyTargeting(next);
+        selectedTower.ResetTarget();
+        PopulateInfo(selectedTower);
+    }
+    
+    public void SelectUpgrade(int upgradeIndex)
+    {
+        if (!selectedTower.MountUpgrade(_towerManager.availableModules[upgradeIndex]))
+            return;
+        _towerManager.availableModules.RemoveAt(upgradeIndex);
+        UpdateAvailableModules();
+    }
+
+    public void DemountUpgrade(Module module)
+    {
+        selectedTower.DemountUpgrade(module);
+        _towerManager.availableModules.Add(module);
+        UpdateAvailableModules();
+        RefreshModuleSlots();
+        PopulateInfo(selectedTower);
+    }
+
+    public void MountUpgrade(Module module)
+    {
+        if (lastModuleButton.module != null)
+        {
+            bool mounted = selectedTower.SwapModules(lastModuleButton.module, module);
+            if (!mounted)
+                return;
+            _towerManager.availableModules.Add(lastModuleButton.module);
+            UpdateAvailableModules();
+        }
+        else
+        {
+            bool mounted = selectedTower.MountUpgrade(module);
+            if (!mounted)
+                return;
+        }
+
+        _towerManager.availableModules.Remove(module);
+        UpdateAvailableModules();
+        RefreshModuleSlots();
+        PopulateInfo(selectedTower);
+    }
+
+    public void UpdateAvailableModules()
+    {
+        modulesPopup.Setup();
+    }
+
+    public void RefreshModuleSlots()
+    {
+        for (int i = 0; i < moduleSlots.Count; i++)
+        {
+            moduleSlots[i].Reset();
+
+            if (i >= selectedTower._currTowerLevel.moduleSlots)
+            {
+                moduleSlots[i].gameObject.SetActive(false);
+                continue;
+            }
+
+            moduleSlots[i].gameObject.SetActive(true);
+        }
+
+        for (int i = 0; i < selectedTower.upgrades.Count; i++)
+        {
+            moduleSlots[i].Setup(selectedTower.upgrades[i]);
+        }
     }
 }
