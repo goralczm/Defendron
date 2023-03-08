@@ -1,7 +1,5 @@
 using UnityEngine;
 
-public enum TowerType { Shooting, Laser, Control, Universal, Firing_Exclusive }
-
 [System.Serializable]
 public class TowerLevel
 {
@@ -20,7 +18,6 @@ public class TowerLevel
 public class TowerTemplate : ScriptableObject
 {
     public new string name;
-    public TowerType type;
     public TowerLevel[] levels;
     public GameObject specialPrefab;
     public string script;

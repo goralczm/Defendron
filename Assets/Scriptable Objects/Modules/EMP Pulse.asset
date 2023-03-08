@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b4fde1511b5b544982edbffab92b75, type: 3}
+  m_Name: EMP Pulse
+  m_EditorClassIdentifier: 
+  name: EMP Pulse
+  description: 
+  compatibleTowers:
+  - {fileID: 11400000, guid: 3838485abb5feef4ab6039f64a1910bf, type: 2}
+  icon: {fileID: 21300000, guid: 8272ea7c59da847458432e7c88bf7766, type: 3}
+  tier: 1
+  health: 0
+  damage: 0
+  range: 0
+  rateOfFire: 0
+  shootMultiplier: 0
+  script: EMP_Pulse
+  projectile: {fileID: 0}
+  exclusiveModules: []

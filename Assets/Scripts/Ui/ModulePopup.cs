@@ -78,24 +78,19 @@ public class ModulePopup : MonoBehaviour
                 continue;
             }
 
-            if (upgradeList[i].towerTypes != TowerType.Universal)
+            if (upgradeList[i].compatibleTowers.Count != 0)
             {
-                if (upgradeList[i].towerTypes == TowerType.Firing_Exclusive)
+                if (!upgradeList[i].compatibleTowers.Contains(popupPanel.selectedTower.towerTemplate))
                 {
-                    if (popupPanel.selectedTower.towerTemplate.type != TowerType.Shooting && popupPanel.selectedTower.towerTemplate.type != TowerType.Laser)
-                    {
-                        buttonList[i].gameObject.SetActive(false);
-                        continue;
-                    }
+                    buttonList[i].gameObject.SetActive(false);
+                    continue;
                 }
-                else
-                {
-                    if (upgradeList[i].towerTypes != popupPanel.selectedTower.towerTemplate.type)
-                    {
-                        buttonList[i].gameObject.SetActive(false);
-                        continue;
-                    }
-                }
+            }
+
+            if (upgradeList[i].uncompatibleTowers.Contains(popupPanel.selectedTower.towerTemplate))
+            {
+                buttonList[i].gameObject.SetActive(false);
+                continue;
             }
 
             buttonList[i].EnableButton();

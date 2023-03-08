@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Multishot
   description: 
-  towerTypes: 4
+  compatibleTowers: []
+  uncompatibleTowers:
+  - {fileID: 11400000, guid: 3838485abb5feef4ab6039f64a1910bf, type: 2}
+  - {fileID: 11400000, guid: ea057fe8b3413ee4c95217992afe5c4a, type: 2}
   icon: {fileID: 21300000, guid: 3069f766f3216e54991e42cd1c1813a9, type: 3}
   tier: 1
   health: 0

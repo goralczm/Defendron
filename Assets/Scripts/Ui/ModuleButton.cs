@@ -40,6 +40,8 @@ public class ModuleButton : MonoBehaviour, IPointerDownHandler
 
         if (module.icon != null)
             icon.sprite = module.icon;
+        else
+            icon.sprite = null;
     }
 
     public void OnPointerDown(PointerEventData eventData)

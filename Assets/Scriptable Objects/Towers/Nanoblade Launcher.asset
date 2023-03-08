@@ -21,7 +21,8 @@ MonoBehaviour:
     shootsMultiplier: 1
     moduleSlots: 5
     cost: 150
-    sprite: {fileID: 1492705027, guid: 8f5a416abfed2f24fb05398d86496159, type: 3}
+    sprite: {fileID: 1490405749, guid: 1964b617adc69724e9dd3cb4d8ddba62, type: 3}
     bullet: {fileID: 5615459151639005115, guid: d7737d2efda7032478d7b504d3d053fe, type: 3}
+  specialPrefab: {fileID: 0}
   script: Tower
   onDestroyEffect: explosion

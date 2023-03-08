@@ -19,6 +19,9 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (TransitionManager.instance.isChangingScene)
+                return;
+
             if (!popupPanel.activeSelf && !towerManager.isBuilding)
                 gameManager.PauseGame();
 

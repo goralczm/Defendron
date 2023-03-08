@@ -17,11 +17,12 @@ MonoBehaviour:
   levels:
   - damage: 1
     range: 2
-    rateOfFire: 0.1
+    rateOfFire: 0.6
     shootsMultiplier: 1
     moduleSlots: 5
     cost: 100
     sprite: {fileID: -1365646832, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
     bullet: {fileID: 5600162859373986173, guid: 91b1fc0a24a258b4189a9f2729cc4edf, type: 3}
+  specialPrefab: {fileID: 0}
   script: Tower
   onDestroyEffect: explosion

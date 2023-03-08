@@ -7,7 +7,8 @@ public class Module : ScriptableObject
 {
     public new string name;
     [TextArea] public string description;
-    public TowerType towerTypes;
+    public List<TowerTemplate> compatibleTowers;
+    public List<TowerTemplate> uncompatibleTowers;
     public Sprite icon;
     public int tier;
 

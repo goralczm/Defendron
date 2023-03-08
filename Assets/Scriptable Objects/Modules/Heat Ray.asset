@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Heat Ray
   description: 
-  towerTypes: 1
+  compatibleTowers:
+  - {fileID: 11400000, guid: 359850fef9902b64c90123d4175d7eeb, type: 2}
+  uncompatibleTowers: []
   icon: {fileID: 21300000, guid: 8eec37969716a074c99c4a80e4f4c098, type: 3}
   tier: 1
-  sortId: 4
   health: 0
   damage: 0
   range: 0
@@ -25,3 +26,4 @@ MonoBehaviour:
   shootMultiplier: 0
   script: 
   projectile: {fileID: 4275486807213700756, guid: 0730cc9d79a81a14da5242291d0ad48c, type: 3}
+  exclusiveModules: []

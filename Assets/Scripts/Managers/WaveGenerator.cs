@@ -25,6 +25,7 @@ public class WaveGenerator : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI wavesText;
     [SerializeField] private TextMeshProUGUI bossText;
+    [SerializeField] private GameObject directionArrows;
     [SerializeField] private Waypoints waypoints;
     [SerializeField] private WaveStage[] waveStages;
 
@@ -60,11 +61,11 @@ public class WaveGenerator : MonoBehaviour
             PlayerPrefs.SetInt(sceneName, 1);
             if (sceneName.Length == 11)
                 PlayerPrefs.SetInt("act" + sceneName[3], 1);
-            SceneManager.LoadScene("level_select");
+            TransitionManager.instance.ChangeScene("level_select");
             return;
         }
         _gameManager.money += waveStages[_currWave].reward;
-        _gameManager.PauseTowers();
+        //_gameManager.PauseTowers();
         _audioManager.Play("sell");
         Time.timeScale = 1f;
         _currWave++;
@@ -81,6 +82,7 @@ public class WaveGenerator : MonoBehaviour
     public void GenerateCurrentWave()
     {
         StartCoroutine(GenerateWaveStage(waveStages[_currWave]));
+        directionArrows.SetActive(false);
     }
 
     IEnumerator GenerateWaveStage(WaveStage wave)
@@ -91,9 +93,6 @@ public class WaveGenerator : MonoBehaviour
             StartCoroutine(GenerateEnemiesInWave(wave.enemies[i], wave.enemyIntervals));
             yield return new WaitForSeconds(wave.enemies[i].enemyCount * wave.enemyIntervals + wave.enemies[i].pauseInterval);
         }
-
-        yield return new WaitForSeconds(3f);
-
         wave.completed = true;
         _isGenerating = false;
     }

@@ -71,7 +71,7 @@ public class Drones : Tower
         foreach (Tower drone in drones)
         {
             drone.damage = damage;
-            drone.range = range;
+            drone.range = range / 2;
             drone.rateOfFire = rateOfFire;
             drone.shootMultiplier = 1;
         }

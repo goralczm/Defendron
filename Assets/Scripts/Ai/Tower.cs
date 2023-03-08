@@ -95,6 +95,7 @@ public class Tower : MonoBehaviour
     {
         if (_shootTimer <= 0)
         {
+            List<Transform> targetsToDelete = new List<Transform>();
             foreach (Transform target in _targets)
             {
                 Vector3 dir = target.transform.position - transform.position;
@@ -105,9 +106,6 @@ public class Tower : MonoBehaviour
                 EnemyAi currTarget = target.GetComponent<EnemyAi>();
                 tmpBulletScript.PopulateInfo(currTarget, damage, range);
                 _audioManager.Play("bullet");
-
-                if (currTarget.ReturnLeftHealth() - damage <= 0)
-                    _targetsToIngore.Add(target);
             }
             _shootTimer = rateOfFire;
 
@@ -152,8 +150,8 @@ public class Tower : MonoBehaviour
 
         foreach (Collider2D hit in hits)
         {
-            if (_targetsToIngore.Contains(hit.transform) || _targets.Contains(hit.transform))
-                continue;
+            /*if (_targetsToIngore.Contains(hit.transform) || _targets.Contains(hit.transform))
+                continue;*/
 
             Vector2 dir = hit.transform.position - transform.position;
             RaycastHit2D ray = Physics2D.Raycast(transform.position, dir, range, (1 << 8) | (1 << 9));
@@ -469,20 +467,6 @@ public class Tower : MonoBehaviour
 
     public virtual bool MountUpgrade(Module newUpgrade, int insertIndex = -2)
     {
-        if (newUpgrade.towerTypes != TowerType.Universal)
-        {
-            if (newUpgrade.towerTypes == TowerType.Firing_Exclusive)
-            {
-                if (towerTemplate.type != TowerType.Shooting && towerTemplate.type != TowerType.Laser)
-                    return false;
-            }
-            else
-            {
-                if (newUpgrade.towerTypes != towerTemplate.type)
-                    return false;
-            }
-        }
-
         if (insertIndex >= 0)
             upgrades.Insert(insertIndex, newUpgrade);
         else

@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Shield Breaker
   description: 
-  towerTypes: 4
+  compatibleTowers: []
+  uncompatibleTowers:
+  - {fileID: 11400000, guid: 3838485abb5feef4ab6039f64a1910bf, type: 2}
+  - {fileID: 11400000, guid: ea057fe8b3413ee4c95217992afe5c4a, type: 2}
   icon: {fileID: 21300000, guid: caeb8f9b4f8cad14995762357c9c92f8, type: 3}
   tier: 2
-  sortId: 9
   health: 0
   damage: 2
   range: 0
@@ -25,3 +27,4 @@ MonoBehaviour:
   shootMultiplier: 0
   script: 
   projectile: {fileID: 0}
+  exclusiveModules: []

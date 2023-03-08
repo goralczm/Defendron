@@ -17,6 +17,7 @@ public class EnemyAi : MonoBehaviour
     private EffectsManager _effectsManager;
     private SpriteRenderer _spriteRenderer;
     private Point currTargetPoint;
+    private bool invurnelable;
 
     private void Awake()
     {
@@ -54,6 +55,9 @@ public class EnemyAi : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (invurnelable)
+            return;
+
         health -= damage;
         if (health <= 0)
         {
@@ -119,5 +123,17 @@ public class EnemyAi : MonoBehaviour
         _effectsManager.PlayEffect(enemyTemplate.onDieEffect, transform.position);
         _waveGenerator.enemiesAlive.Remove(transform);
         Destroy(gameObject);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == 9)
+            invurnelable = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == 9)
+            invurnelable = false;
     }
 }

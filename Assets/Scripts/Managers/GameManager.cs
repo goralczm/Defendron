@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public TowerManager towerManager;
     public Material defaultSpriteMat;
     public Material pixelOutlineMat;
+    public GameObject pulseEffect;
 
     public int health;
     public int money;
@@ -62,12 +63,7 @@ public class GameManager : MonoBehaviour
         health -= Mathf.RoundToInt(damage);
         _cameraController.TriggerShake();
         if (health <= 0)
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    private int RoundDamage(float damage)
-    {
-        return (int)((damage / 10) + 1);
+            TransitionManager.instance.ChangeScene(SceneManager.GetActiveScene().name);
     }
 
     public Tower CheckCellState(Vector2 cellPos)
@@ -86,12 +82,18 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         for (int i = 0; i < waveGenerators.Length; i++)
         {
+            if (waveGenerators[i] == null)
+                continue;
+
             if (!waveGenerators[i].CanStartWave())
                 return;
         }
 
         for (int i = 0; i < waveGenerators.Length; i++)
         {
+            if (waveGenerators[i] == null)
+                continue;
+
             waveGenerators[i].GenerateCurrentWave();
         }
 
@@ -116,7 +118,8 @@ public class GameManager : MonoBehaviour
 
     public void ReloadLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1f;
+        TransitionManager.instance.ChangeScene(SceneManager.GetActiveScene().name);
     }
 
     public Tower ReturnTowerOnCell(Vector2 pos)

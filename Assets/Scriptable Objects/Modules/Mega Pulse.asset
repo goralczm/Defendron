@@ -15,7 +15,9 @@ MonoBehaviour:
   name: Mega Pulse
   description: Limits your lasers to one at a time. Shoots laser with mega damage,
     needs to recharge after each shot
-  towerTypes: 1
+  compatibleTowers:
+  - {fileID: 11400000, guid: 359850fef9902b64c90123d4175d7eeb, type: 2}
+  uncompatibleTowers: []
   icon: {fileID: 21300000, guid: f15d75bc562fe7c4c85c54cbc77d6ba7, type: 3}
   tier: 0
   health: 0

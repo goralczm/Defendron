@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Rate Increase
   description: 
-  towerTypes: 4
+  compatibleTowers: []
+  uncompatibleTowers:
+  - {fileID: 11400000, guid: 3838485abb5feef4ab6039f64a1910bf, type: 2}
   icon: {fileID: 0}
   tier: 1
   health: 0

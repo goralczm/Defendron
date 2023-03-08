@@ -33,23 +33,23 @@ public class LaserTower : Tower
             {
                 if (i == 5)
                     return;
-                _laser[i].gameObject.SetActive(true);
                 _laser[i].PopulateInfo(_targets[i].GetComponent<EnemyAi>(), damage, range);
-
+                _laser[0].ChangePosition(_targets[i]);
                 _laser[i].isMegaShot = false;
+                _laser[i].gameObject.SetActive(true);
             }
         }
         else
         {
             if (_shootTimer > 0)
             {
-                _laser[0].gameObject.SetActive(true);
                 _laser[0].PopulateInfo(_targets[0].GetComponent<EnemyAi>(), 0, range);
-
+                _laser[0].ChangePosition(_targets[0]);
                 _laser[0].isMegaShot = true;
                 _laser[0]._laser.widthMultiplier = 8;
                 if (_targets[0] != null)
                     _targets[0].GetComponent<EnemyAi>().TakeDamage(damage);
+                _laser[0].gameObject.SetActive(true);
                 _shootTimer = 0;
             }
             else

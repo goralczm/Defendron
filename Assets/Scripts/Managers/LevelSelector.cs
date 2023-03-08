@@ -15,22 +15,12 @@ public class Act
     public bool completed;
 }
 
-[System.Serializable]
-public class LevelData
-{
-    public string levelName = "";
-    public bool completed;
-}
-
 public class LevelSelector : MonoBehaviour
 {
     public List<Act> acts;
-    public LevelData[] levelsData;
 
     private void Start()
     {
-        levelsData = new LevelData[5 * 10];
-
         for (int i = 1; i <= acts.Count; i++)
         {
             acts[i - 1].actTitle.text = "Act " + i + " - " + acts[i - 1].name;
@@ -59,7 +49,13 @@ public class LevelSelector : MonoBehaviour
                 buttons[j - 1].interactable = Convert.ToBoolean(PlayerPrefs.GetInt(previousLevel, 0));
             }
 
-            if (i > 1 && !Convert.ToBoolean(PlayerPrefs.GetInt("act" + (i - 2).ToString())))
+            if (i > 1)
+            {
+                acts[i - 1].lockedPanel.SetActive(true);
+                continue;
+            }
+
+            if (i > 1 && !Convert.ToBoolean(PlayerPrefs.GetInt("act" + (i - 1).ToString())))
                 acts[i - 1].lockedPanel.SetActive(true);
         }
     }

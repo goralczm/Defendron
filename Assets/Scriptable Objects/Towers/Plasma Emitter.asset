@@ -21,7 +21,7 @@ MonoBehaviour:
     shootsMultiplier: 1
     moduleSlots: 2
     cost: 200
-    sprite: {fileID: 2104039930, guid: f6843439e401bf44fb1efa855c20a403, type: 3}
+    sprite: {fileID: -210557153, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
     bullet: {fileID: 5643903000296068887, guid: 84c723e734f5d1c46af75d449c7dd09c, type: 3}
   - damage: 2
     range: 4
@@ -29,7 +29,7 @@ MonoBehaviour:
     shootsMultiplier: 1
     moduleSlots: 3
     cost: 200
-    sprite: {fileID: -785446808, guid: f6843439e401bf44fb1efa855c20a403, type: 3}
+    sprite: {fileID: -210557153, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
     bullet: {fileID: 5643903000296068887, guid: 84c723e734f5d1c46af75d449c7dd09c, type: 3}
   - damage: 6
     range: 5
@@ -37,7 +37,8 @@ MonoBehaviour:
     shootsMultiplier: 1
     moduleSlots: 4
     cost: 200
-    sprite: {fileID: -248728429, guid: f6843439e401bf44fb1efa855c20a403, type: 3}
+    sprite: {fileID: -210557153, guid: 5da0fabec95b5fe4f9b171d1639727a3, type: 3}
     bullet: {fileID: 5643903000296068887, guid: 84c723e734f5d1c46af75d449c7dd09c, type: 3}
+  specialPrefab: {fileID: 0}
   script: LaserTower
   onDestroyEffect: explosion

@@ -33,6 +33,12 @@ public class Laser : Bullet
         _laser.SetPosition(1, target.transform.position);
     }
 
+    public void ChangePosition(Transform newTarget)
+    {
+        _laser.SetPosition(0, transform.position);
+        _laser.SetPosition(1, newTarget.transform.position);
+    }
+
     public virtual void DealDamage(float newDamage)
     {
         if (target == null)

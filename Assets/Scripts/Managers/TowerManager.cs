@@ -26,6 +26,7 @@ public class TowerManager : MonoBehaviour
     private Tower _currSelectedTower;
 
     private GameManager _gameManager;
+    private EffectsManager _effectsManager;
     private AudioManager _audioManager;
     private TowerTemplate _currentTowerTemplate;
     private Tower _currTowerGhost;
@@ -34,6 +35,7 @@ public class TowerManager : MonoBehaviour
     private void Start()
     {
         _gameManager = GameManager.instance;
+        _effectsManager = EffectsManager.instance;
         _popupPanel = _gameManager.popupPanel;
         _audioManager = _gameManager.GetComponent<AudioManager>();
 
@@ -117,6 +119,7 @@ public class TowerManager : MonoBehaviour
                 _currTowerGhost.isBuilding = false;
                 _currTowerGhost.GetComponent<BoxCollider2D>().enabled = true;
                 _currTowerGhost.HideRangeIndicator();
+                _effectsManager.PlayEffect("cloud", _currTowerGhost.transform.position);
                 _currTowerGhost = null;
                 _audioManager.Play("build");
                 isBuilding = false;
